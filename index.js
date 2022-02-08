@@ -1,5 +1,6 @@
 const express = require('express');
-const path = require('path')
+const path = require('path');
+const bodyParser = require('body-parser');
 
 const app = express()
 const port = 3000
@@ -37,10 +38,11 @@ function allFromDatabase(database){
 
 
 //
+// for parsing application/json
+app.use(bodyParser.json()); 
 
 
-
-//Below is code for the Seving of files and such
+//Below is code for the Serving of files and such
 
 app.use(express.static('public'))
 app.set('view engine', 'pug')
@@ -48,6 +50,29 @@ app.set('view engine', 'pug')
 app.get('/',(req, res) => {
     res.render('index')
 })
+
+
+//
+app.post('/addUser', async(req, res) =>{
+    console.log(req.body);
+    //console.log("Student Added!");
+    UsersDatabase.insert(req.body);
+    const users = await allFromDatabase(UsersDatabase);
+    console.log(users);
+    res.writeHead(200, {'Content-Type': 'text/html'})
+    res.end('')
+ });
+
+ app.post('/deleteUser', function(req, res){
+    console.log("Attempting to Remove User!");
+    console.log(req.body)
+    UsersDatabase.remove(req.body, {}, function (err, numRemoved) {
+      });
+    res.writeHead(200, {'Content-Type': 'text/html'})
+    res.end('')
+    UsersDatabase.loadDatabase();
+ });
+
 
 app.listen(port, () =>{
     console.log('ResScheduler app listening on port ' + port)
