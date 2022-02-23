@@ -1,140 +1,260 @@
+var passport = require('passport');
 const express = require('express');
-const path = require('path');
-const bodyParser = require('body-parser');
-var passport = require('passport');
-var LocalStrategy = require('passport-local');
-var crypto = require('crypto');
-var db = require('../db');
-
-var logger = require('morgan');
-var passport = require('passport');
-var session = require('express-session');
-
-var SQLiteStore = require('connect-sqlite3')(session);
-
+const LocalStrategy = require('passport-local').Strategy;
+const crypto = require("crypto")
 const app = express()
-const port = 3000
-
-
-
-const Datastore = require('@yetzt/nedb');
-
-const UsersDatabase = new Datastore('dataStores/UsersDatabase.db');
-UsersDatabase.loadDatabase();
+const port = 3000;
+const bodyParser = require('body-parser');
+const mysql = require("mysql")
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
 
 
 
 
 
-function allFromDatabase(database){
-    return new Promise(resolve =>{
-    database.find({}, function (err, docs){
-    var count = 0;
-    const test = [];
-    if(err) {
-        console.log("loadDB Error")
-        response.end();
-        return;
-    }
-    
-    docs.forEach( element => {
-        count = (test.push(element));
-    });
-    resolve(test);
-});
-    });
-};
 
-
-
-//
-// for parsing application/json
-app.use(bodyParser.json()); 
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
+    key: 'session_cookie_name',
+    secret: 'session_cookie_secret',
+    store: new MySQLStore({
+        host: 'localhost',
+        port:3306,
+        user:'root',
+        password:'Dogdog12',
+        database:'cookie_user'
+    }),
+    resave:false,
     saveUninitialized: false,
-    store: new SQLiteStore({ db: 'sessions.db', dir: './var/db' })
-  }));
-  app.use(passport.authenticate('session'));
-
-
-passport.use(new LocalStrategy(function verify(username, password, cb) {
-    db.get('SELECT rowid AS id, * FROM users WHERE username = ?', [ username ], function(err, row) {
-      if (err) { return cb(err); }
-      if (!row) { return cb(null, false, { message: 'Incorrect username or password.' }); }
-  
-      crypto.pbkdf2(password, row.salt, 310000, 32, 'sha256', function(err, hashedPassword) {
-        if (err) { return cb(err); }
-        if (!crypto.timingSafeEqual(row.hashed_password, hashedPassword)) {
-          return cb(null, false, { message: 'Incorrect username or password.' });
-        }
-        return cb(null, row);
-      });
-    });
-  }));
+    cookie:{
+        maxAge:1000*60*60*24
+    }
+}));
 
 
 
 
 
-passport.serializeUser(function(user, cb) {
-    process.nextTick(function() {
-        cb(null, { id: user.id, username: user.username });
-    });
-});
-
-passport.deserializeUser(function(user, cb) {
-    process.nextTick(function() {
-        return cb(null, user);
-    });
-});
 
 
-
-
-//Below is code for the Serving of files and such
-
+//Middleware Setup
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static('public'))
 app.set('view engine', 'pug')
 
-app.get('/',(req, res) => {
-    res.render('index')
-})
+var connection = mysql.createConnection({
+    host: "localhost",
+    port:3306,
+    user: "root",
+    password:'Dogdog12',
+    database: "user",
+    multipleStatements: true
+});
+connection.connect((err)=>{
+    if(!err){
+        console.log("Connected");
+    }else{
+        console.log(err);
+    }
+});
 
-app.get('/login', function(req, res, next) {
-    res.render('login');
+
+const customFields={
+    usernameField: 'uname',
+    passwordField: 'pw',
+};
+
+const verifyCallback=(username,password,done)=>{
+   
+    connection.query('SELECT * FROM users WHERE username = ? ', [username], function(error, results, fields) {
+       if (error) 
+           return done(error);
+
+       if(results.length==0)
+       {
+           return done(null,false);
+       }
+       const isValid=validPassword(password,results[0].hash,results[0].salt);
+       user={id:results[0].id,username:results[0].username,hash:results[0].hash,salt:results[0].salt};
+       if(isValid)
+       {
+           return done(null,user);
+       }
+       else{
+           return done(null,false);
+       }
+   });
+}
+
+const strategy=new LocalStrategy(customFields,verifyCallback);
+passport.use(strategy);
+
+
+passport.serializeUser((user,done)=>{
+   console.log("inside serialize");
+   done(null,user.id)
+});
+
+passport.deserializeUser(function(userId,done){
+   console.log('deserializeUser'+ userId);
+   connection.query('SELECT * FROM users where id = ?',[userId], function(error, results) {
+           done(null, results[0]);    
+   });
+});
+
+
+
+/*middleware*/
+function validPassword(password,hash,salt)
+{
+   var hashVerify=crypto.pbkdf2Sync(password,salt,10000,60,'sha512').toString('hex');
+   return hash === hashVerify;
+}
+
+function genPassword(password)
+{
+   var salt=crypto.randomBytes(32).toString('hex');
+   var genhash=crypto.pbkdf2Sync(password,salt,10000,60,'sha512').toString('hex');
+   return {salt:salt,hash:genhash};
+}
+
+
+function isAuth(req,res,next)
+{
+   if(req.isAuthenticated())
+   {
+       next();
+   }
+   else
+   {
+       res.redirect('/notAuthorized');
+   }
+}
+
+
+function isAdmin(req,res,next)
+{
+   if(req.isAuthenticated() && req.user.isAdmin==1)
+   {
+       next();
+   }
+   else
+   {
+       res.redirect('/notAuthorizedAdmin');
+   }   
+}
+
+function userExists(req,res,next)
+{
+   connection.query('Select * from users where username=? ', [req.body.uname], function(error, results, fields) {
+       if (error) 
+           {
+               console.log("Error");
+           }
+      else if(results.length>0)
+        {
+           res.redirect('/userAlreadyExists')
+       }
+       else
+       {
+           next();
+       }
+      
+   });
+}
+
+
+app.use((req,res,next)=>{
+   console.log(req.session);
+   console.log(req.user);
+   next();
+});
+
+
+/*routes*/
+app.get('/', (req, res, next) => {
+    res.send('<h1>Home</h1><p>Please <a href="/register">register</a></p>');
+});
+
+app.get('/login', (req, res, next) => {
+        res.render('login')
+});
+app.get('/logout', (req, res, next) => {
+    req.logout(); //delets the user from the session
+    res.redirect('/protected-route');
+});
+app.get('/login-success', (req, res, next) => {
+    res.send('<p>You successfully logged in. --> <a href="/protected-route">Go to protected route</a></p>');
+});
+
+app.get('/login-failure', (req, res, next) => {
+    res.send('You entered the wrong password.');
+});
+
+
+app.get('/register', (req, res, next) => {
+    console.log("Inside get");
+    res.render('register')
+    
+});
+
+app.post('/register',userExists,(req,res,next)=>{
+    console.log("Inside post");
+    console.log(req.body.pw);
+    const saltHash=genPassword(req.body.pw);
+    console.log(saltHash);
+    const salt=saltHash.salt;
+    const hash=saltHash.hash;
+
+    connection.query('INSERT INTO users(username,hash,salt,isAdmin) values(?,?,?,0) ', [req.body.uname,hash,salt], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+
+    res.redirect('/login');
+});
+
+app.post('/login',passport.authenticate('local',{failureRedirect:'/login-failure',successRedirect:'/login-success'}));
+
+app.get('/protected-route',isAuth,(req, res, next) => {
+ 
+    res.send('<h1>You are authenticated</h1><p><a href="/logout">Logout and reload</a></p>');
+});
+
+app.get('/admin-route',isAdmin,(req, res, next) => {
+ 
+    res.send('<h1>You are admin</h1><p><a href="/logout">Logout and reload</a></p>');
+
+});
+
+app.listen(port, function() {
+    console.log('App listening on port 8080!')
   });
 
-app.post('/login/password', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login'
- }));
 
-
-//
-app.post('/addUser', async(req, res) =>{
-    console.log(req.body);
-    //console.log("Student Added!");
-    UsersDatabase.insert(req.body);
-    const users = await allFromDatabase(UsersDatabase);
-    console.log(users);
-    res.writeHead(200, {'Content-Type': 'text/html'})
-    res.end('')
- });
-
- app.post('/deleteUser', function(req, res){
-    console.log("Attempting to Remove User!");
-    console.log(req.body)
-    UsersDatabase.remove(req.body, {}, function (err, numRemoved) {
-      });
-    res.writeHead(200, {'Content-Type': 'text/html'})
-    res.end('')
-    UsersDatabase.loadDatabase();
- });
-
-
-app.listen(port, () =>{
-    console.log('ResScheduler app listening on port ' + port)
-})
+  app.get('/notAuthorized', (req, res, next) => {
+    console.log("Inside get");
+    res.send('<h1>You are not authorized to view the resource </h1><p><a href="/login">Retry Login</a></p>');
+    
+});
+app.get('/notAuthorizedAdmin', (req, res, next) => {
+    console.log("Inside get");
+    res.send('<h1>You are not authorized to view the resource as you are not the admin of the page  </h1><p><a href="/login">Retry to Login as admin</a></p>');
+    
+});
+app.get('/userAlreadyExists', (req, res, next) => {
+    console.log("Inside get");
+    res.send('<h1>Sorry This username is taken </h1><p><a href="/register">Register with different username</a></p>');
+    
+});
