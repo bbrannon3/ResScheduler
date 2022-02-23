@@ -1,2 +1,23 @@
 link(href = 'css/test.css', rel='stylesheet')
 p Hello world this is me testing to see if files are being served!
+
+form(id = "stuInf")
+            label(for = "fname") First Name: 
+            input(name = "fname" value = "First Name")
+            br
+            label(for = "lname") Last Name: 
+            input(name = "lname" value = "Last Name")
+            br  
+            label(for="uniNum") Uniform Number: 
+            input(name = "uniNum" value = "Uniform Number")
+            br
+            button(type = "submit") Add User
+
+form(id = "removeUser").Submitable
+            label(for = "_id") Id: 
+            input(name = "_id" value = "Id")
+            br
+            button(type = "submit") Remove User
+
+
+script(type = "application/javascript" src = "javascript/formDataGrab.js")

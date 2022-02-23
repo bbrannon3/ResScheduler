@@ -1,0 +1,29 @@
+doctype html
+html(dir='ltr' lang='en')
+  head
+    meta(charset='utf-8')
+    title Registeration
+    script(src='https://kit.fontawesome.com/7cddce98d5.js' crossorigin='anonymous')
+    link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' integrity='sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z' crossorigin='anonymous')
+    link(rel='stylesheet' href='/css/styles.css')
+    script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js' integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj' crossorigin='anonymous')
+    script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js' integrity='sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN' crossorigin='anonymous')
+    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js' integrity='sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV' crossorigin='anonymous')
+    link(href='https://fonts.googleapis.com/css2?family=Montserrat:wght@500;900&family=Ubuntu&display=swap' rel='stylesheet')
+    link(rel='icon' href='/images/traffic_small_logo.png')
+  body.background
+    section#login
+      form(action='register' method='post' style='border-color:#66bfbf')
+        .container.logindiv
+          h1.logintitle Register
+          .inp
+            label Username : 
+            input(type='text' placeholder='Enter Username' name='uname' required='')
+          .inp
+            label Password : 
+            input(type='password' placeholder='Enter Password' name='pw' required='')
+          p.textp
+            | Already a member ?
+            a.to_register(href='/login')  Go and log in 
+          .loginbutton
+            button.singlebutton.btn.btn-primary(type='submit') Register
