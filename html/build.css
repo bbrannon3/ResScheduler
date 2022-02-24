@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 #menu {
-	background: #00533E;
+	background: #072D2A;
 	color: #FFF;
 	height: 78px;
 	padding-left: 18px;
@@ -109,12 +109,8 @@ body {
       padding: 2rem;
   }
   .bkimage {
-	background-image: url('mainbackground.png');
+	background-image: url('newbackgroundimage.jpg');
 	background-repeat: no-repeat;
-	position: relative;
-	margin-left: auto;
-	margin-right: auto;
-	background-size:contain;
-	background-position:center;
+	max-width: 100%;
   }
 
