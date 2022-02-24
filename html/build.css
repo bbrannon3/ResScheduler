@@ -113,4 +113,11 @@ body {
 	background-repeat: no-repeat;
 	max-width: 100%;
   }
+  .container {
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	text-align: center;
+	padding: 3rem;
+  }
 
