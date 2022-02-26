@@ -120,4 +120,7 @@ body {
 	text-align: center;
 	padding: 3rem;
   }
-
+.footer-custom {
+	background-color: #072D2A;
+	color: white;
+}
