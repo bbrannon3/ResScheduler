@@ -120,7 +120,21 @@ body {
 	text-align: center;
 	padding: 3rem;
   }
-.footer-custom {
-	background-color: #072D2A;
+#footer {
+	position: fixed;
+    padding: 10px 10px 0px 10px;
+    bottom: 0;
+    width: 100%;
+    /* Height of the footer*/ 
+    height: 60px;
+    background: #00533E;
 	color: white;
 }
+#page-container {
+	position: relative;
+	min-height: 100vh;
+  }
+  #content-wrap {
+	padding-bottom: 2.5rem;    /* Footer height */
+  }
+  
