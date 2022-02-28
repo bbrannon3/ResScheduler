@@ -137,4 +137,7 @@ body {
   #content-wrap {
 	padding-bottom: 2.5rem;    /* Footer height */
   }
+  .bg-mikado {
+	background-color: #ffc711;
+  }
   
