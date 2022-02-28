@@ -6,6 +6,7 @@ const app = express()
 const port = 3000;
 const bodyParser = require('body-parser');
 const mysql = require("mysql")
+
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 
@@ -166,6 +167,132 @@ function userExists(req,res,next)
    });
 }
 
+function createMonth(month, year){
+    connection.query('Insert into schedule_months(Month,Year) values(?,?)', [month,year], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully added " + month);
+            for( i = 0; i<4; i++){
+                createWeek(results["insertId"], i)
+            }
+        }
+        
+    });
+
+}
+
+function createWeek(month, placement){
+    connection.query('Insert into schedule_weeks(Month_Id,Place) values(?,?)', [month,placement], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully added week " + placement);
+            //TO-DO Add offset for weeks at the beginning and end of the month that dont have 7 days or start on Sunday or end on Saturday
+            for( i = 0; i<7; i++){
+                createDay(results["insertId"], i)
+            }
+        }
+        
+    });
+}
+
+function createDay(week, day){
+    connection.query('Insert into schedule_days(Week_Id,Day) values(?,?)', [week,day], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully added Day " + day);
+            for( i = 0; i<24; i++){
+                createHour(results["insertId"], i)
+            }
+        }
+        
+    });
+}
+
+function createHour(day, hour){
+    connection.query('Insert into schedule_hours(Day_Id, Hour) values(?,?)', [day, hour], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully added hour: " +  hour);
+        }
+        
+    });
+}
+
+function getMonthValue(month){
+    var out = 0
+    switch(month.toLowerCase()){
+        case("january"):
+            out = 0;
+            break;
+        case("february"):
+            out = 1;
+            break;
+        case("march"):
+            out = 2;
+            break;
+        case("april"):
+            out = 3;
+            break;
+        case("may"):
+            out = 4;
+            break;
+        case("june"):
+            out = 5;
+            break;
+        case("july"):
+            out = 6;
+            break;
+        case("august"):
+            out = 7;
+            break;
+        case("september"):
+            out = 8;
+            break;
+        case("october"):
+            out = 9;
+            break;
+        case("november"):
+            out = 10;
+            break;
+        case("december"):
+            out = 11;
+            break;
+    }
+    return out;
+}
+
+function calculateFirstDay(year, month){
+    result = (new Date (year, month)).toString()
+    return result.substring(0,3)
+}
+
+function isLastDay(year, month, day){
+    init = (new Date (year, month)).getMonth()
+    second = (new Date (year, month, day+1)).getMonth()
+    return init != second
+
+}
+
 
 app.use((req,res,next)=>{
    console.log(req.session);
@@ -239,7 +366,7 @@ app.get('/admin-route',isAdmin,(req, res, next) => {
 });
 
 app.listen(port, function() {
-    console.log('App listening on port 8080!')
+    console.log('App listening on port %d!',port)
   });
 
 
