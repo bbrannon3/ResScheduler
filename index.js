@@ -6,7 +6,6 @@ const app = express()
 const port = 3000;
 const bodyParser = require('body-parser');
 const mysql = require("mysql")
-
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 
@@ -67,7 +66,6 @@ const customFields={
     usernameField: 'uname',
     passwordField: 'pw',
 };
-
 const verifyCallback=(username,password,done)=>{
    
     connection.query('SELECT * FROM users WHERE username = ? ', [username], function(error, results, fields) {
@@ -89,8 +87,7 @@ const verifyCallback=(username,password,done)=>{
        }
    });
 }
-
-const strategy=new LocalStrategy(customFields,verifyCallback);
+const strategy=new LocalStrategy(customFields, verifyCallback);
 passport.use(strategy);
 
 
@@ -121,7 +118,6 @@ function genPassword(password)
    var genhash=crypto.pbkdf2Sync(password,salt,10000,60,'sha512').toString('hex');
    return {salt:salt,hash:genhash};
 }
-
 
 function isAuth(req,res,next)
 {
@@ -177,8 +173,16 @@ function createMonth(month, year){
         else
         {
             console.log("Successfully added " + month);
-            for( i = 0; i<4; i++){
-                createWeek(results["insertId"], i)
+            for (i =1; i < 6; i++){
+                if((new Date(year,month, (i*7)+1)).getWeekOfMonth()== 0){
+                    end = i-1
+                    break
+                }
+                end = i
+            }
+            for( i = 0; i<end; i++){
+                
+                createWeek(results["insertId"], i, year)
             }
         }
         
@@ -186,7 +190,7 @@ function createMonth(month, year){
 
 }
 
-function createWeek(month, placement){
+function createWeek(month, placement, year){
     connection.query('Insert into schedule_weeks(Month_Id,Place) values(?,?)', [month,placement], function(error, results, fields) {
         if (error) 
             {
@@ -197,7 +201,21 @@ function createWeek(month, placement){
         {
             console.log("Successfully added week " + placement);
             //TO-DO Add offset for weeks at the beginning and end of the month that dont have 7 days or start on Sunday or end on Saturday
-            for( i = 0; i<7; i++){
+            if (placement == 0){
+                start = calculateFirstDay(year, month);
+            } else {
+                start = 0;
+            }
+            end = 7;
+            if (placement > 3){
+                for(i = 0; i < 7; i++){
+                    if(isLastDay(year, month, ((placement-1)*7)+(7-calculateFirstDay(year, month))+i)){
+                        end = i;
+                    }
+                }
+            }
+            for( i = start; i<end; i++){
+                
                 createDay(results["insertId"], i)
             }
         }
@@ -236,6 +254,12 @@ function createHour(day, hour){
         }
         
     });
+}
+
+Date.prototype.getWeekOfMonth = function() {
+    var firstWeekday = new Date(this.getFullYear(), this.getMonth(), 1).getDay();
+    var offsetDate = this.getDate() + firstWeekday - 1;
+    return Math.floor(offsetDate / 7);
 }
 
 function getMonthValue(month){
@@ -282,8 +306,8 @@ function getMonthValue(month){
 }
 
 function calculateFirstDay(year, month){
-    result = (new Date (year, month)).toString()
-    return result.substring(0,3)
+    result = (new Date (year, month)).getDay()
+    return result
 }
 
 function isLastDay(year, month, day){
@@ -291,6 +315,10 @@ function isLastDay(year, month, day){
     second = (new Date (year, month, day+1)).getMonth()
     return init != second
 
+}
+function currentYear(){
+    const today = new Date();
+    return today.getFullYear();
 }
 
 
@@ -301,8 +329,9 @@ app.use((req,res,next)=>{
 });
 
 
-/*routes*/
+// Routes
 app.get('/', (req, res, next) => {
+    //createMonth("March", 2022)
     res.send('<h1>Home</h1><p>Please <a href="/register">register</a></p>');
 });
 
@@ -328,7 +357,7 @@ app.get('/register', (req, res, next) => {
     
 });
 
-app.post('/register',userExists,(req,res,next)=>{
+app.post('/register', userExists,(req,res,next)=>{
     console.log("Inside post");
     console.log(req.body.pw);
     const saltHash=genPassword(req.body.pw);
@@ -365,12 +394,7 @@ app.get('/admin-route',isAdmin,(req, res, next) => {
 
 });
 
-app.listen(port, function() {
-    console.log('App listening on port %d!',port)
-  });
-
-
-  app.get('/notAuthorized', (req, res, next) => {
+app.get('/notAuthorized', (req, res, next) => {
     console.log("Inside get");
     res.send('<h1>You are not authorized to view the resource </h1><p><a href="/login">Retry Login</a></p>');
     
@@ -385,3 +409,10 @@ app.get('/userAlreadyExists', (req, res, next) => {
     res.send('<h1>Sorry This username is taken </h1><p><a href="/register">Register with different username</a></p>');
     
 });
+
+
+//Start App
+
+app.listen(port, function() {
+    console.log('App listening on port %d!',port)
+  });
