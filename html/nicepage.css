@@ -18486,7 +18486,7 @@ a.pswp__share--download:hover {
 @media (max-width: 767px) {
   .u-table-responsive {
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: auto;
   }
   .u-table-responsive thead th,
   .u-table-responsive tfoot th,
