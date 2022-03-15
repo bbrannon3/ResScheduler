@@ -152,6 +152,7 @@ body {
   .sch-btn {
 	  padding: 1rem;
   }
+  /* This is a single-line comment 
   #m9a {
 	  background-color: crimson;
 	  color: white;
@@ -163,4 +164,8 @@ body {
   #m11a {
 	  background-color: crimson;
 	  color: white;
+  }
+  */
+  .cell-right {
+	  border-right: 0rem;
   }
