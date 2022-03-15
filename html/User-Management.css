@@ -42,6 +42,10 @@
   margin: -54px auto 31px 19px;
 }
 
+.icon-primary-color {
+  color: #7F9976;
+}
+
 @media (max-width: 1199px) {
   .u-section-1 .u-form-1 {
     width: 570px;
