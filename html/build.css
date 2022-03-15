@@ -140,4 +140,27 @@ body {
   .bg-mikado {
 	background-color: #ffc711;
   }
-  
+  body {
+	background-color: #ECEBE4;
+  }
+  .bg-mikado {
+	background-color: #ffc711; 
+  }
+  .icon-black {
+	  color: black;
+  }
+  .sch-btn {
+	  padding: 1rem;
+  }
+  #m9a {
+	  background-color: crimson;
+	  color: white;
+  }
+  #m10a {
+	background-color: crimson;
+	color: white;
+  }
+  #m11a {
+	  background-color: crimson;
+	  color: white;
+  }
