@@ -149,6 +149,18 @@ body {
   .icon-black {
 	  color: black;
   }
-  #m12a {
+  .sch-btn {
+	  padding: 1rem;
+  }
+  #m9a {
 	  background-color: crimson;
+	  color: white;
+  }
+  #m10a {
+	background-color: crimson;
+	color: white;
+  }
+  #m11a {
+	  background-color: crimson;
+	  color: white;
   }
