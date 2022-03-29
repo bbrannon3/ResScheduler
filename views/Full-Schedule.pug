@@ -86,7 +86,8 @@ html(style='font-size: 16px;')
 								th.tg-vr4i(colspan='25')
 									a(href='#')
 										i.fa-solid.icon-white.fa-caret-left.fa-2xl
-									strong Week of February 15, 2022
+									-var date = DateInfo["Month"] + " " + DateInfo["Day"] + ", " + DateInfo["Year"]
+									strong= "Week of " + date
 									a(href='#')
 										i.fa-solid.icon-white.fa-caret-right.fa-2xl
 						tbody
@@ -117,33 +118,13 @@ html(style='font-size: 16px;')
 								td.tg-vr4i 10 pm
 								td.tg-vr4i 11 pm
 							each val, key in {0:"Monday",1:"Tuesday",2:"Wednesday",3:"Thursday",4:"Friday",5:"Saturday",6:"Sunday"}
-								- 
 								tr
 									td.tg-vr4i(rowspan='1')= val 
-									td#m12a.tg-0lax
-									td#m1a.tg-0lax
-									td#m2a.tg-0lax
-									td#m3a.tg-0lax
-									td#m4a.tg-0lax
-									td#m5a.tg-0lax
-									td#m6a.tg-0lax
-									td#m7a.tg-0lax
-									td#m8a.tg-0lax
-									td#m9a.tg-0lax
-									td#m10a.tg-0lax
-									td#m11a.tg-0lax
-									td#m12p.tg-0lax
-									td#m1p.tg-0lax
-									td#m2p.tg-0lax
-									td#m3p.tg-0lax
-									td#m4p.tg-0lax
-									td#m5p.tg-0lax
-									td#m6p.tg-0lax
-									td#m7p.tg-0lax
-									td#m8p.tg-0lax
-									td#m9p.tg-0lax
-									td#m10p.tg-0lax
-									td#m11p.tg-0lax
+									- for(x = 0; x < 24; x++) 
+										td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"])= info[key][x]["WorkerName"]
+											form(action="/PlaceWorker" method="POST" style={height: "100%", width: "100%"})
+												input(type="hidden" value= info[key][x]["HourId"] name="Hour_Id")
+												div(onclick="this.parentNode.submit()" style={height: "25px", width: "25px", cursor: "pointer"})
 							
 					// End Schedule Table
 			p  
