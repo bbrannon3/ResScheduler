@@ -1,23 +1,89 @@
-link(href = 'css/test.css', rel='stylesheet')
-p Hello world this is me testing to see if files are being served!
-
-form(id = "stuInf")
-            label(for = "fname") First Name: 
-            input(name = "fname" value = "First Name")
-            br
-            label(for = "lname") Last Name: 
-            input(name = "lname" value = "Last Name")
-            br  
-            label(for="uniNum") Uniform Number: 
-            input(name = "uniNum" value = "Uniform Number")
-            br
-            button(type = "submit") Add User
-
-form(id = "removeUser").Submitable
-            label(for = "_id") Id: 
-            input(name = "_id" value = "Id")
-            br
-            button(type = "submit") Remove User
-
-
-script(type = "application/javascript" src = "javascript/formDataGrab.js")
+doctype html
+html(style='font-size: 16px;')
+	head
+		meta(name='viewport' content='width=device-width, initial-scale=1.0')
+		meta(charset='utf-8')
+		meta(name='keywords' content='')
+		meta(name='description' content='')
+		meta(name='page_type' content='np-template-header-footer-from-plugin')
+		title Home
+		link(rel='stylesheet' href='css/nicepage.css' media='screen')
+		link(rel='stylesheet' href='css/Home.css' media='screen')
+		script.u-script(type='text/javascript' src='javascript/jquery.js' defer='')
+		script.u-script(type='text/javascript' src='javascript/nicepage.js' defer='')
+		meta(name='generator' content='Nicepage 4.6.5, nicepage.com')
+		link#u-theme-google-font(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i')
+		script(type='application/ld+json').
+			{
+			"@context": "http://schema.org",
+			"@type": "Organization",
+			"name": ""
+			}
+		meta(name='theme-color' content='#478ac9')
+		meta(property='og:title' content='Home')
+		meta(property='og:type' content='website')
+	body.u-body.u-image.u-xl-mode(data-home-page='index' data-home-page-title='Home' style='background-position: 50% 50%; background-image: url("images/newbackgroundimage.jpg");')
+		header#sec-cd71.u-clearfix.u-custom-color-1.u-header(data-animation-name='' data-animation-duration='0' data-animation-delay='0' data-animation-direction='')
+			.u-clearfix.u-sheet.u-valign-middle.u-sheet-1
+				a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-2.u-hover-custom-color-2.u-radius-50.u-text-custom-color-3.u-btn-1(href='login') Log In
+				nav.u-menu.u-menu-dropdown.u-offcanvas.u-menu-1
+					.menu-collapse(style='font-size: 1rem; letter-spacing: 0px;')
+						a.u-button-style.u-custom-left-right-menu-spacing.u-custom-padding-bottom.u-custom-top-bottom-menu-spacing.u-nav-link.u-palette-1-base.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='#')
+							svg.u-svg-link(viewBox='0 0 24 24')
+								use(xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='#menu-hamburger')
+							svg#menu-hamburger.u-svg-content(version='1.1' viewBox='0 0 16 16' x='0px' y='0px' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg')
+								g
+									rect(y='1' width='16' height='2')
+									rect(y='7' width='16' height='2')
+									rect(y='13' width='16' height='2')
+					.u-custom-menu.u-nav-container
+						ul.u-custom-font.u-heading-font.u-nav.u-unstyled.u-nav-1
+							li.u-nav-item
+								a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='#' style='padding: 10px 20px;') Preferences
+							li.u-nav-item
+								a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Full-Schedule' style='padding: 10px 20px;') Schedule Viewer
+							li.u-nav-item
+								a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='#' style='padding: 10px 20px;') Trade Shifts
+					.u-custom-menu.u-nav-container-collapse
+						.u-black.u-container-style.u-inner-container-layout.u-opacity.u-opacity-95.u-sidenav
+							.u-inner-container-layout.u-sidenav-overflow
+								.u-menu-close
+								ul.u-align-center.u-nav.u-popupmenu-items.u-unstyled.u-nav-2
+									li.u-nav-item
+										a.u-button-style.u-nav-link(href='#' style='padding: 10px 20px;') Preferences
+									li.u-nav-item
+										a.u-button-style.u-nav-link(href='Full-Schedule' style='padding: 10px 20px;') Schedule Viewer
+									li.u-nav-item
+										a.u-button-style.u-nav-link(href='#' style='padding: 10px 20px;') Trade Shifts
+						.u-black.u-menu-overlay.u-opacity.u-opacity-70
+				img.u-image.u-image-default.u-preserve-proportions.u-image-1(src='images/ATUWork.png' alt='' data-image-width='153' data-image-height='29' data-href='index' data-page-id='652222725')
+		section#carousel_732d.u-align-center.u-clearfix.u-section-1
+			.u-clearfix.u-sheet.u-sheet-1
+				.u-expanded-width.u-list.u-list-1
+					.u-repeater.u-repeater-1
+						.u-container-style.u-custom-color-2.u-list-item.u-repeater-item.u-shape-rectangle.u-list-item-1
+							.u-container-layout.u-similar-container.u-valign-top.u-container-layout-1
+								.u-container-style.u-custom-color-3.u-expanded-width.u-group.u-shape-rectangle.u-group-1
+									.u-container-layout.u-valign-top.u-container-layout-2
+										h4.u-align-center.u-text.u-text-1 Preferences
+								p.u-align-center.u-custom-font.u-heading-font.u-text.u-text-2  A schedule made just for you! Customize your schedule today. 
+								a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-1(href='https://nicepage.com/k/teacher-website-templates') Customize Now
+						.u-align-center.u-container-style.u-custom-color-2.u-list-item.u-repeater-item.u-shape-rectangle.u-list-item-2
+							.u-container-layout.u-similar-container.u-valign-top.u-container-layout-3
+								.u-container-style.u-custom-color-3.u-expanded-width.u-group.u-shape-rectangle.u-group-2
+									.u-container-layout.u-valign-top.u-container-layout-4
+										h4.u-align-center.u-text.u-text-3 Schedule Viewer
+								p.u-align-center.u-custom-font.u-heading-font.u-text.u-text-4
+									| Easily view your schedule in minutes!
+									br
+									br
+								a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-2(href='My-Schedule') View Schedule
+						.u-align-center.u-container-style.u-custom-color-2.u-list-item.u-repeater-item.u-shape-rectangle.u-list-item-3
+							.u-container-layout.u-similar-container.u-valign-top.u-container-layout-5
+								.u-container-style.u-custom-color-3.u-expanded-width.u-group.u-shape-rectangle.u-group-3
+									.u-container-layout.u-valign-top.u-container-layout-6
+										h4.u-align-center.u-text.u-text-5 Trade Shifts
+								p.u-align-center.u-custom-font.u-heading-font.u-text.u-text-6  Trading shifts with your coworkers is as easy as a press of a button...
+								a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-3(href='https://nicepage.com/k/teacher-website-templates') Trade Shifts
+		footer.custom-footer
+			.text-center.p-3
