@@ -7,6 +7,9 @@ const port = 3000;
 const bodyParser = require('body-parser');
 const mysql = require("mysql")
 var session = require('express-session');
+const { waitForDebugger } = require('inspector');
+const { resolve } = require('path');
+const { type } = require('os');
 var MySQLStore = require('express-mysql-session')(session);
 
 
@@ -163,6 +166,291 @@ function userExists(req,res,next)
    });
 }
 
+async function getScheduleWeeksIDsForMonth(month_id){
+    return new Promise(resolve =>{
+    out = [];
+    connection.query('Select idSchedule_Weeks from schedule_weeks where Month_Id=?', [month_id], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+                   
+            results.forEach(element => {
+                
+                out.push(element["idSchedule_Weeks"])     
+            });
+            resolve(out);        
+       }
+       else
+       {
+           console.log("Week Not found")
+           resolve([])
+       }
+    })
+    
+
+    
+
+})
+
+}
+
+
+
+async function getScheduleWeekIdbyPlacement(placement, month_id){
+    return new Promise(resolve =>{
+    out = [];
+    connection.query('Select idSchedule_Weeks from schedule_weeks where (Month_Id, Place) = (?,?)', [month_id, placement], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+                   
+            results.forEach(element => {
+                
+                out.push(element["idSchedule_Weeks"])     
+            });
+            resolve(out);        
+       }
+       else
+       {
+           console.log("Week Not found")
+           resolve([])
+       }
+    })
+    
+
+    
+
+})
+
+}
+
+
+
+
+async function getScheduleDaysPlaceandIdsByWeek(week_id){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select idSchedule_Days, Day from schedule_days where Week_Id = ?', [week_id], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                
+                out[element["Day"]]=element["idSchedule_Days"]     
+            });
+            resolve(out);        
+       }
+       else
+       {
+           console.log("Days Not found")
+           resolve([])
+       }
+    })
+  })
+}
+
+
+async function getScheduleHoursPlacmentandIdsByDay(day_id){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select idSchedule_Hours, Hour from schedule_hours where Day_Id = ?', [day_id], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out[element["Hour"]] = element["idSchedule_Hours"]     
+            });
+            resolve(out);        
+       }
+       else
+       {
+           console.log("Hours Not found")
+           resolve([])
+       }
+    })
+  })
+}
+
+
+async function getScheduledHoursForUser(user_id){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select * from shift_info where Worker_ID = ?', [user_id], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out[element["id"]] = {  "Hour_ID":element["Hour_ID"],
+                                        "WO_Count" : element["WO_Count"], 
+                                        "Shift_Role" : element["Shift_Role"]
+                                    }
+            });
+            resolve(out);        
+       }
+       else
+       {
+           //console.log("No Hours found")
+           resolve([])
+       }
+    })
+  })
+}
+
+
+async function getScheduledHoursForUserByHour(user_id, hourId){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select * from shift_info where Worker_ID = ? and Hour_ID = ?', [user_id, hourId], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out = { 
+                                        "WO_Count" : element["WO_Count"], 
+                                        "Shift_Role" : element["Shift_Role"],
+                                        "WorkerName" : element["Worker_ID"]
+                                    }
+            });
+            resolve(out);        
+       }
+       else
+       {
+           //console.log("No Hours found")
+           resolve([])
+       }
+    })
+  })
+}
+
+
+function createScheduleHour(hourId, workerId, shiftRole, woCount = 0){
+    connection.query('Insert into shift_info(Hour_ID,Worker_ID,WO_Count,Shift_Role) values(?,?,?,?)', [hourId,workerId, woCount, shiftRole], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            
+            console.log("Suceccfully Added shift")
+
+        }
+        
+    });
+}
+
+
+async function getUserInfoById(user_id){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select id, username from users where id = ?', [user_id], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out = { 
+                                        "id":element["id"],
+                                        "username":element["username"]
+                        }
+            });
+            resolve(out);        
+       }
+       else
+       {
+           //console.log("No Hours found")
+           resolve([])
+       }
+    })
+  })
+}
+
+async function getShiftRoleInfoById(role_id){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select Name, Color from shift_roles where ID = ?', [role_id], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out = { 
+                                        "ShiftName":element["Name"],
+                                        "Color":element["Color"]
+                        }
+            });
+            resolve(out);        
+       }
+       else
+       {
+           //console.log("No Hours found")
+           resolve([])
+       }
+    })
+  })
+}
+
+
+async function compileWeekSchedulingObj(Worker_ID, Month_Id, WeekPlacement){
+
+        UserInfo = await getUserInfoById(Worker_ID);
+        WeekByMonth =  await getScheduleWeekIdbyPlacement(WeekPlacement, Month_Id);
+        DayAndPlace = await getScheduleDaysPlaceandIdsByWeek(WeekByMonth[0]); //Returns Dictionary of
+        HourAndPlace = {}
+        for (i = 0; i < 7; i++){
+            const temp = await getScheduleHoursPlacmentandIdsByDay(DayAndPlace[i]); //Returns dictionary of 24 Hours
+            HourAndPlace[i]= temp;                                            //Has keys of the placement
+        }
+    ByHours = {}
+    for(i=0; i<7; i++){
+        hours = {}
+        for(x=0; x < 24; x++){
+        temp = await getScheduledHoursForUserByHour(Worker_ID, HourAndPlace[i][x])
+        shiftRoleInfo = await getShiftRoleInfoById(temp["Shift_Role"]);
+         hours[x] = {
+            "HourId": HourAndPlace[i][x],
+            "WO_Count": temp["WO_Count"]  || "",
+            "ShiftRoleName": shiftRoleInfo["ShiftName"] || "",
+            "ShiftRoleColor": shiftRoleInfo["Color"] || "",
+            "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || ""
+
+            }
+        }
+        ByHours[i] = hours; 
+    }
+    return(ByHours)
+}
+
+
 function createMonth(month, year){
     connection.query('Insert into schedule_months(Month,Year) values(?,?)', [month,year], function(error, results, fields) {
         if (error) 
@@ -189,6 +477,40 @@ function createMonth(month, year){
     });
 
 }
+
+
+async function createMonthIfNotExist(month, year){
+    console.log(month+ " "+ year)
+    return new Promise(resolve =>{
+    connection.query('Select * from schedule_months where Month = ? and Year = ?', [getMonthFromValue(month),year], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+            else if(results.length>0){
+                
+                resolve(results[0]["idSchedule_Months"])    
+            }
+        else
+        {
+            console.log(results)
+            if(month != null){
+                createMonth(getMonthFromValue(month), year)
+                resolve(createMonthIfNotExist(month, year))
+            }
+            else{
+                console.log("Borked")
+                resolve("")
+            }
+            
+        }
+        
+    });
+})
+
+}
+
 
 function createWeek(month, placement, year){
     connection.query('Insert into schedule_weeks(Month_Id,Place) values(?,?)', [month,placement], function(error, results, fields) {
@@ -305,6 +627,39 @@ function getMonthValue(month){
     return out;
 }
 
+function getMonthFromValue(month){
+    
+        months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ]
+        console.log(months[month])
+        return months[month]
+    
+}
+
+function getCurrentMonthandWeek(){
+    d = new Date
+    month = d.getMonth();
+    week = d.getWeekOfMonth();
+    console.log("Week:" + week)
+    day = d.getDate();
+    return {"week":week,
+            "month":month,
+            "day": day
+}
+}
+
 function calculateFirstDay(year, month){
     result = (new Date (year, month)).getDay()
     return result
@@ -330,13 +685,46 @@ app.use((req,res,next)=>{
 
 
 // Routes
-app.get('/', (req, res, next) => {
+app.get('/', async(req, res, next) => {
     //createMonth("March", 2022)
-    res.send('<h1>Home</h1><p>Please <a href="/register">register</a></p>');
+    //const ids = await compileWeekSchedulingObj(4,4,0);
+    //console.log(ids)
+    //createScheduleHour(44, 4, 1, 2)
+    date = getCurrentMonthandWeek();
+    confirmation = await createMonthIfNotExist(date["month"], currentYear())
+    res.render('index')
 });
 
+app.get('/index', (req, res, next) => {
+  
+    res.redirect('/')
+});
+
+
+app.get('/Full-Schedule',isAuth, async(req, res, next) => {
+    fullInfo = {}
+    currDate = getCurrentMonthandWeek()
+    fullInfo["DateInfo"] = {
+        "Day": currDate["day"],
+        "Week": currDate["week"],
+        "Month": getMonthFromValue(currDate["month"]),
+        "Year": currentYear()
+    }
+    console.log("Sched: " + currDate["week"])
+    fullInfo["info"] = await compileWeekSchedulingObj(4, await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
+    //console.log(fullInfo["info"])
+    res.render('Full-Schedule', fullInfo);
+});
+
+app.get('/My-Schedule',isAuth,(req, res, next) => {
+    res.render('my-Schedule');
+});
+
+
+
+
 app.get('/login', (req, res, next) => {
-        res.render('login')
+        res.render('login');
 });
 app.get('/logout', (req, res, next) => {
     req.logout(); //delets the user from the session
@@ -381,7 +769,14 @@ app.post('/register', userExists,(req,res,next)=>{
     res.redirect('/login');
 });
 
-app.post('/login',passport.authenticate('local',{failureRedirect:'/login-failure',successRedirect:'/login-success'}));
+app.post('/PlaceWorker', (req, res, next)=>{
+    console.log(req.body);
+    createScheduleHour(req.body["Hour_Id"], 4, 1, 1)
+   //res.sendStatus("200")
+    res.redirect("/Full-Schedule")
+})
+
+app.post('/login',passport.authenticate('local',{failureRedirect:'/login-failure',successRedirect:'/'}));
 
 app.get('/protected-route',isAuth,(req, res, next) => {
  

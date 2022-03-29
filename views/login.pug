@@ -1,29 +1,84 @@
 doctype html
-html(dir='ltr' lang='en')
-  head
-    meta(charset='utf-8')
-    title Login System
-    script(src='https://kit.fontawesome.com/7cddce98d5.js' crossorigin='anonymous')
-    link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' integrity='sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z' crossorigin='anonymous')
-    link(rel='stylesheet' href='/css/styles.css')
-    script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js' integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj' crossorigin='anonymous')
-    script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js' integrity='sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN' crossorigin='anonymous')
-    script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js' integrity='sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV' crossorigin='anonymous')
-    link(href='https://fonts.googleapis.com/css2?family=Montserrat:wght@500;900&family=Ubuntu&display=swap' rel='stylesheet')
-    link(rel='icon' href='/images/traffic_small_logo.png')
-  body.background
-    section#login
-      form(action='/login' method='post' style='border-color:#66bfbf')
-        .container.logindiv
-          h1.logintitle Login
-          .inp
-            label Username : 
-            input(type='text' placeholder='Enter Username' name='uname' required='')
-          .inp
-            label Password : 
-            input(type='password' placeholder='Enter Password' name='pw' required='')
-          p.textp
-            | Not a member yet ? 
-            a.to_register(href='/register') Join us
-          .loginbutton
-            button.singlebutton.btn.btn-primary(formaction='/login' type='submit') Login
+html(style='font-size: 16px;')
+	head
+		meta(name='viewport' content='width=device-width, initial-scale=1.0')
+		meta(charset='utf-8')
+		meta(name='keywords' content='')
+		meta(name='description' content='')
+		meta(name='page_type' content='np-template-header-footer-from-plugin')
+		title Login
+		link(rel='stylesheet' href='css/nicepage.css' media='screen')
+		link(rel='stylesheet' href='css/Login.css' media='screen')
+		script.u-script(type='text/javascript' src='javascript/jquery.js' defer='')
+		script.u-script(type='text/javascript' src='javascript/nicepage.js' defer='')
+		meta(name='generator' content='Nicepage 4.6.5, nicepage.com')
+		link#u-theme-google-font(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i')
+		script(type='application/ld+json').
+			{
+			"@context": "http://schema.org",
+			"@type": "Organization",
+			"name": "Site1"
+			}
+		meta(name='theme-color' content='#478ac9')
+		meta(property='og:title' content='Login')
+		meta(property='og:description' content='')
+		meta(property='og:type' content='website')
+	body.u-body.u-xl-mode
+		header#sec-cd71.u-clearfix.u-custom-color-1.u-header(data-animation-name='' data-animation-duration='0' data-animation-delay='0' data-animation-direction='')
+			.u-clearfix.u-sheet.u-valign-middle.u-sheet-1
+				a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-2.u-hover-custom-color-2.u-radius-50.u-text-custom-color-3.u-btn-1(href='https://nicepage.me') Log In
+				nav.u-menu.u-menu-dropdown.u-offcanvas.u-menu-1
+					.menu-collapse(style='font-size: 1rem; letter-spacing: 0px;')
+						a.u-button-style.u-custom-left-right-menu-spacing.u-custom-padding-bottom.u-custom-top-bottom-menu-spacing.u-nav-link.u-palette-1-base.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='#')
+							svg.u-svg-link(viewBox='0 0 24 24')
+								use(xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='#menu-hamburger')
+							svg#menu-hamburger.u-svg-content(version='1.1' viewBox='0 0 16 16' x='0px' y='0px' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg')
+								g
+									rect(y='1' width='16' height='2')
+									rect(y='7' width='16' height='2')
+									rect(y='13' width='16' height='2')
+					.u-custom-menu.u-nav-container
+						ul.u-custom-font.u-heading-font.u-nav.u-unstyled.u-nav-1
+							li.u-nav-item
+								a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='#' style='padding: 10px 20px;') Preferences
+							li.u-nav-item
+								a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='#' style='padding: 10px 20px;') Schedule Viewer
+							li.u-nav-item
+								a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='#' style='padding: 10px 20px;') Trade Shifts
+					.u-custom-menu.u-nav-container-collapse
+						.u-black.u-container-style.u-inner-container-layout.u-opacity.u-opacity-95.u-sidenav
+							.u-inner-container-layout.u-sidenav-overflow
+								.u-menu-close
+								ul.u-align-center.u-nav.u-popupmenu-items.u-unstyled.u-nav-2
+									li.u-nav-item
+										a.u-button-style.u-nav-link(href='#' style='padding: 10px 20px;') Preferences
+									li.u-nav-item
+										a.u-button-style.u-nav-link(href='#' style='padding: 10px 20px;') Schedule Viewer
+									li.u-nav-item
+										a.u-button-style.u-nav-link(href='#' style='padding: 10px 20px;') Trade Shifts
+						.u-black.u-menu-overlay.u-opacity.u-opacity-70
+				img.u-image.u-image-default.u-preserve-proportions.u-image-1(src='images/ATUWork.png' alt='' data-image-width='153' data-image-height='29' data-href='index')
+		section#sec-d113.u-clearfix.u-section-1
+			.u-clearfix.u-sheet.u-sheet-1
+		form(action='/login' method='post')
+			.form-group
+				label(for='exampleInputEmail1') Email address
+				input#exampleInputEmail1.form-control(type='email' aria-describedby='emailHelp' placeholder='Enter email' name='uname')
+				small#emailHelp.form-text.text-muted We'll never share your email with anyone else.
+			.form-group
+				label(for='exampleInputPassword1') Password
+				input#exampleInputPassword1.form-control(type='password' placeholder='Password' name='pw')
+			.form-check
+				input#exampleCheck1.form-check-input(type='checkbox')
+				label.form-check-label(for='exampleCheck1') Check me out
+			button.btn.btn-primary(type='submit') Submit
+		footer#sec-a088.u-align-center.u-clearfix.u-custom-color-1.u-footer.u-footer
+			.u-align-left.u-clearfix.u-sheet.u-sheet-1
+		section.u-backlink.u-clearfix.u-grey-80
+			a.u-link(href='https://nicepage.com/website-templates' target='_blank')
+				span Website Templates
+			p.u-text
+				span created with
+			a.u-link(href='' target='_blank')
+				span Website Builder Software
+			| .
