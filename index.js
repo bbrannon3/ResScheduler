@@ -752,7 +752,7 @@ app.get('/', async(req, res, next) => {
     //console.log(ids)
     //createScheduleHour(44, 4, 1, 2)
     //console.log(req.user.username.toString())
-    var info = {"username" : req.user.username || "Log In"};
+    var info = {"username" : "Log In"};
     date = getCurrentMonthandWeek();
     confirmation = await createMonthIfNotExist(date["month"], currentYear())
     res.render('index', info)
