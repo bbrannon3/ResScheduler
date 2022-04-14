@@ -1,0 +1,164 @@
+.u-section-1 .u-sheet-1 {
+  min-height: 742px;
+}
+
+.u-section-1 .u-text-1 {
+  font-family: Poppins;
+  font-weight: 600;
+  margin: 17px auto 0 14px;
+}
+
+.u-section-1 .u-group-1 {
+  width: 311px;
+  min-height: 36px;
+  margin: 17px auto 0 216px;
+}
+
+.u-section-1 .u-container-layout-1 {
+  padding-left: 9px;
+  padding-right: 9px;
+}
+
+.u-section-1 .u-text-2 {
+  margin: 0 7px 0 0;
+}
+
+.u-section-1 .u-text-3 {
+  font-family: Poppins;
+  font-weight: 600;
+  margin: -36px auto 0 22px;
+}
+
+.u-section-1 .u-text-4 {
+  font-family: Poppins;
+  font-weight: 600;
+  margin: 20px auto 0 22px;
+}
+
+.u-section-1 .u-group-2 {
+  width: 311px;
+  min-height: 36px;
+  margin: -36px auto 0 216px;
+}
+
+.u-section-1 .u-container-layout-2 {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.u-section-1 .u-text-5 {
+  margin: 0 7px;
+}
+
+.u-section-1 .u-text-6 {
+  font-family: Poppins;
+  font-weight: 600;
+  margin: 20px auto 0 99px;
+}
+
+.u-section-1 .u-group-3 {
+  width: 311px;
+  min-height: 36px;
+  margin: -36px auto 0 216px;
+}
+
+.u-section-1 .u-container-layout-3 {
+  padding-left: 9px;
+  padding-right: 9px;
+}
+
+.u-section-1 .u-text-7 {
+  margin: 0 56px 0 0;
+}
+
+.u-section-1 .u-text-8 {
+  font-family: Poppins;
+  font-weight: 600;
+  margin: 20px auto 0 88px;
+}
+
+.u-section-1 .u-group-4 {
+  width: 311px;
+  min-height: 36px;
+  margin: -36px auto 0 216px;
+}
+
+.u-section-1 .u-container-layout-4 {
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.u-section-1 .u-text-9 {
+  margin: 0 121px 0 0;
+}
+
+.u-section-1 .u-text-10 {
+  font-family: Poppins;
+  font-weight: 600;
+  margin: 20px auto 0 54px;
+}
+
+.u-section-1 .u-group-5 {
+  width: 311px;
+  min-height: 36px;
+  margin: -36px auto 0 216px;
+}
+
+.u-section-1 .u-container-layout-5 {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.u-section-1 .u-text-11 {
+  margin: 0 146px 0 0;
+}
+
+.u-section-1 .u-btn-1 {
+  border-style: none;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 1px;
+  background-image: none;
+  text-transform: none;
+  margin: 14px auto 0 212px;
+}
+
+.u-section-1 .u-text-12 {
+  font-family: Poppins;
+  font-weight: 600;
+  margin: -36px auto 60px 35px;
+}
+
+@media (max-width: 1199px) {
+  .u-section-1 .u-btn-1 {
+    margin-left: 12px;
+  }
+}
+
+@media (max-width: 991px) {
+  .u-section-1 .u-btn-1 {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 575px) {
+  .u-section-1 .u-group-1 {
+    margin-left: 29px;
+  }
+
+  .u-section-1 .u-group-2 {
+    margin-left: 29px;
+  }
+
+  .u-section-1 .u-group-3 {
+    margin-left: 29px;
+  }
+
+  .u-section-1 .u-group-4 {
+    margin-left: 29px;
+  }
+
+  .u-section-1 .u-group-5 {
+    margin-left: 29px;
+  }
+}
