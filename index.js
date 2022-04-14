@@ -100,7 +100,7 @@ passport.serializeUser((user,done)=>{
 });
 
 passport.deserializeUser(function(userId,done){
-   console.log('deserializeUser'+ userId);
+   console.log('deserializeUser '+ userId);
    connection.query('SELECT * FROM users where id = ?',[userId], function(error, results) {
            done(null, results[0]);    
    });
@@ -126,6 +126,7 @@ function isAuth(req,res,next)
 {
    if(req.isAuthenticated())
    {
+       console.log(req)
        next();
    }
    else
@@ -420,6 +421,37 @@ async function getShiftRoleInfoById(role_id){
 }
 
 
+async function getScheduledHoursbyHour(Hour_Id){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from shift_info where Hour_ID = ?', [Hour_Id], function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+                    out = { 
+                                            "WO_Count" : element["WO_Count"], 
+                                            "Shift_Role" : element["Shift_Role"],
+                                            "WorkerName" : element["Worker_ID"]
+                                        }
+                });
+                resolve(out);        
+           }
+           else
+           {
+               //console.log("No Hours found")
+               resolve([])
+           }
+        })
+      })
+}
+
+
+
 async function compileWeekSchedulingObj(Worker_ID, Month_Id, WeekPlacement){
 
         UserInfo = await getUserInfoById(Worker_ID);
@@ -448,6 +480,35 @@ async function compileWeekSchedulingObj(Worker_ID, Month_Id, WeekPlacement){
         ByHours[i] = hours; 
     }
     return(ByHours)
+}
+
+async function compileWeekSchedulingObjAllUsers(Month_Id, WeekPlacement){
+
+    WeekByMonth =  await getScheduleWeekIdbyPlacement(WeekPlacement, Month_Id);
+    DayAndPlace = await getScheduleDaysPlaceandIdsByWeek(WeekByMonth[0]); //Returns Dictionary of
+    HourAndPlace = {}
+    for (i = 0; i < 7; i++){
+        const temp = await getScheduleHoursPlacmentandIdsByDay(DayAndPlace[i]); //Returns dictionary of 24 Hours
+        HourAndPlace[i]= temp;                                            //Has keys of the placement
+    }
+ByHours = {}
+for(i=0; i<7; i++){
+    hours = {}
+    for(x=0; x < 24; x++){
+    temp = await getScheduledHoursbyHour(HourAndPlace[i][x])
+    shiftRoleInfo = await getShiftRoleInfoById(temp["Shift_Role"]);
+     hours[x] = {
+        "HourId": HourAndPlace[i][x],
+        "WO_Count": temp["WO_Count"]  || "",
+        "ShiftRoleName": shiftRoleInfo["ShiftName"] || "",
+        "ShiftRoleColor": shiftRoleInfo["Color"] || "",
+        "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || ""
+
+        }
+    }
+    ByHours[i] = hours; 
+}
+return(ByHours)
 }
 
 
@@ -678,8 +739,8 @@ function currentYear(){
 
 
 app.use((req,res,next)=>{
-   console.log(req.session);
-   console.log(req.user);
+   //console.log(req.session);
+   //console.log(req.user);
    next();
 });
 
@@ -690,9 +751,11 @@ app.get('/', async(req, res, next) => {
     //const ids = await compileWeekSchedulingObj(4,4,0);
     //console.log(ids)
     //createScheduleHour(44, 4, 1, 2)
+    //console.log(req.user.username.toString())
+    var info = {"username" : req.user.username || "Log In"};
     date = getCurrentMonthandWeek();
     confirmation = await createMonthIfNotExist(date["month"], currentYear())
-    res.render('index')
+    res.render('index', info)
 });
 
 app.get('/index', (req, res, next) => {
@@ -710,14 +773,32 @@ app.get('/Full-Schedule',isAuth, async(req, res, next) => {
         "Month": getMonthFromValue(currDate["month"]),
         "Year": currentYear()
     }
+    fullInfo["user"] = {
+        "userId" : req.user.id,
+        "userName" : req.user.username
+    }
     console.log("Sched: " + currDate["week"])
-    fullInfo["info"] = await compileWeekSchedulingObj(4, await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
+    fullInfo["info"] = await compileWeekSchedulingObjAllUsers(await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
     //console.log(fullInfo["info"])
     res.render('Full-Schedule', fullInfo);
 });
 
-app.get('/My-Schedule',isAuth,(req, res, next) => {
-    res.render('my-Schedule');
+app.get('/My-Schedule',isAuth, async(req, res, next) => {
+    fullInfo = {}
+    currDate = getCurrentMonthandWeek()
+    fullInfo["DateInfo"] = {
+        "Day": currDate["day"],
+        "Week": currDate["week"],
+        "Month": getMonthFromValue(currDate["month"]),
+        "Year": currentYear()
+    }
+    fullInfo["user"] = {
+        "userId" : req.user.id,
+        "userName" : req.user.username
+    }
+    console.log("Sched: " + currDate["week"])
+    fullInfo["info"] = await compileWeekSchedulingObj(req.user.id, await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
+    res.render('my-Schedule', fullInfo);
 });
 
 
@@ -770,8 +851,8 @@ app.post('/register', userExists,(req,res,next)=>{
 });
 
 app.post('/PlaceWorker', (req, res, next)=>{
-    console.log(req.body);
-    createScheduleHour(req.body["Hour_Id"], 4, 1, 1)
+    console.log("Hello ",req.body["User_Id"]);
+    createScheduleHour(req.body["Hour_Id"], req.body["User_Id"], 1, 1)
    //res.sendStatus("200")
     res.redirect("/Full-Schedule")
 })

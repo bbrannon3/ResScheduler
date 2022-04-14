@@ -124,6 +124,7 @@ html(style='font-size: 16px;')
 										td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"])= info[key][x]["WorkerName"]
 											form(action="/PlaceWorker" method="POST" style={height: "100%", width: "100%"})
 												input(type="hidden" value= info[key][x]["HourId"] name="Hour_Id")
+												input(type="hidden" value= user["userId"] name="User_Id")
 												div(onclick="this.parentNode.submit()" style={height: "25px", width: "25px", cursor: "pointer"})
 							
 					// End Schedule Table
