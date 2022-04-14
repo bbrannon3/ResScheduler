@@ -870,7 +870,7 @@ app.post('/New-Password', (req,res, next)=>{
        
     });
 
-    res.redirect('/login');
+    res.redirect('/logout');
 
 });
 
@@ -925,7 +925,7 @@ app.get('/notAuthorized', (req, res, next) => {
 });
 app.get('/notAuthorizedAdmin', (req, res, next) => {
     console.log("Inside get");
-    res.send('<h1>You are not authorized to view the resource as you are not the admin of the page  </h1><p><a href="/login">Retry to Login as admin</a></p>');
+    res.render("Access-Denied");
     
 });
 app.get('/userAlreadyExists', (req, res, next) => {
