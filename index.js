@@ -763,6 +763,31 @@ app.get('/index', (req, res, next) => {
     res.redirect('/')
 });
 
+app.get('/Trade-Shift',isAuth, async(req, res, next) => {
+
+    res.render('Trade-Shift')
+
+});
+
+app.get('/User-Management',isAuth, async(req, res, next) => {
+
+    res.render('User-Management')
+
+});
+
+app.get('/New-Password', isAuth, (req, res, next) => {
+
+    res.render('New-Password')
+
+});
+
+app.get('/User-Settings', isAuth, (req, res, next) => {
+
+    res.render('User-Settings')
+
+});
+
+
 
 app.get('/Full-Schedule',isAuth, async(req, res, next) => {
     fullInfo = {}
@@ -809,7 +834,7 @@ app.get('/login', (req, res, next) => {
 });
 app.get('/logout', (req, res, next) => {
     req.logout(); //delets the user from the session
-    res.redirect('/protected-route');
+    res.redirect('/login');
 });
 app.get('/login-success', (req, res, next) => {
     res.send('<p>You successfully logged in. --> <a href="/protected-route">Go to protected route</a></p>');
@@ -826,15 +851,39 @@ app.get('/register', (req, res, next) => {
     
 });
 
+app.post('/New-Password', (req,res, next)=>{
+
+    const saltHash=genPassword(req.body.password);
+    const salt=saltHash.salt;
+    const hash=saltHash.hash;
+
+    connection.query('UPDATE `users` SET hash=?, salt=? WHERE id=? ', [hash, salt, req.user.id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+
+    res.redirect('/login');
+
+});
+
+
 app.post('/register', userExists,(req,res,next)=>{
     console.log("Inside post");
-    console.log(req.body.pw);
-    const saltHash=genPassword(req.body.pw);
+    console.log(req.body);
+    const saltHash=genPassword(req.body.password);
     console.log(saltHash);
     const salt=saltHash.salt;
     const hash=saltHash.hash;
 
-    connection.query('INSERT INTO users(username,hash,salt,isAdmin) values(?,?,?,0) ', [req.body.uname,hash,salt], function(error, results, fields) {
+    connection.query('INSERT INTO users(username,hash,salt,isAdmin, fname, lname) values(?,?,?,0,?,?) ', [req.body.username,hash,salt,req.body.fname, req.body.lname], function(error, results, fields) {
         if (error) 
             {
                 console.log("Error Inserting");
@@ -851,7 +900,6 @@ app.post('/register', userExists,(req,res,next)=>{
 });
 
 app.post('/PlaceWorker', (req, res, next)=>{
-    console.log("Hello ",req.body["User_Id"]);
     createScheduleHour(req.body["Hour_Id"], req.body["User_Id"], 1, 1)
    //res.sendStatus("200")
     res.redirect("/Full-Schedule")
@@ -872,7 +920,7 @@ app.get('/admin-route',isAdmin,(req, res, next) => {
 
 app.get('/notAuthorized', (req, res, next) => {
     console.log("Inside get");
-    res.send('<h1>You are not authorized to view the resource </h1><p><a href="/login">Retry Login</a></p>');
+    res.render("Access-Denied")
     
 });
 app.get('/notAuthorizedAdmin', (req, res, next) => {
