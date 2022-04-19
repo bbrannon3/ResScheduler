@@ -2,6 +2,10 @@
   background-image: none;
 }
 
+.u-icon-1 {
+  color: #efd75f;
+}
+
 .u-section-1 .u-sheet-1 {
   min-height: 193px;
 }
@@ -21,16 +25,16 @@
 }
 
 .u-section-2 .u-sheet-1 {
-  min-height: 473px;
+  min-height: 391px;
 }
 
 .u-section-2 .u-list-1 {
   width: 216px;
-  margin: 0 auto 0 240px;
+  margin: 8px auto 0 240px;
 }
 
 .u-section-2 .u-repeater-1 {
-  min-height: 270px;
+  min-height: 216px;
   grid-template-columns: 100%;
   grid-gap: 0px 0px;
 }
@@ -75,34 +79,20 @@
   margin: 0;
 }
 
-.u-section-2 .u-container-layout-5 {
-  padding: 0;
-}
-
-.u-section-2 .u-custom-html-5 {
-  min-height: 31px;
-  width: 192px;
-  margin: 0;
-}
-
 .u-section-2 .u-text-1 {
-  margin: -258px auto 0 116px;
+  margin: -204px auto 0 115px;
 }
 
 .u-section-2 .u-text-2 {
-  margin: 21px auto 0 114px;
+  margin: 21px auto 0 113px;
 }
 
 .u-section-2 .u-text-3 {
-  margin: 24px auto 0 162px;
+  margin: 24px auto 0 55px;
 }
 
 .u-section-2 .u-text-4 {
-  margin: 19px auto 0 153px;
-}
-
-.u-section-2 .u-text-5 {
-  margin: 24px auto 0 134px;
+  margin: 21px auto 0 62px;
 }
 
 .u-section-2 .u-btn-1 {
@@ -112,7 +102,7 @@
   letter-spacing: 1px;
   background-image: none;
   text-transform: none;
-  margin: 23px auto 0 307px;
+  margin: 20px auto 0 217px;
 }
 
 .u-section-2 .u-btn-2 {
@@ -122,7 +112,7 @@
   letter-spacing: 1px;
   background-image: none;
   text-transform: none;
-  margin: -42px auto 60px 94px;
+  margin: -42px auto 60px 327px;
 }
 
 @media (max-width: 1199px) {
@@ -142,21 +132,21 @@
     height: auto;
   }
 
-  .u-section-2 .u-custom-html-5 {
-    height: auto;
-  }
-
   .u-section-2 .u-btn-1 {
-    margin-left: 107px;
+    margin-left: 17px;
   }
 
   .u-section-2 .u-btn-2 {
-    margin-left: 0;
+    margin-left: 127px;
   }
 }
 
 @media (max-width: 991px) {
   .u-section-2 .u-btn-1 {
+    margin-left: 0;
+  }
+
+  .u-section-2 .u-btn-2 {
     margin-left: 0;
   }
 }
@@ -167,22 +157,6 @@
   }
 
   .u-section-2 .u-text-1 {
-    margin-left: 73px;
-  }
-
-  .u-section-2 .u-text-2 {
     margin-left: 72px;
-  }
-
-  .u-section-2 .u-text-3 {
-    margin-left: 102px;
-  }
-
-  .u-section-2 .u-text-4 {
-    margin-left: 96px;
-  }
-
-  .u-section-2 .u-text-5 {
-    margin-left: 84px;
   }
 }
