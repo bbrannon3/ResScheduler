@@ -2,67 +2,83 @@ var passport = require('passport');
 const express = require('express');
 const LocalStrategy = require('passport-local').Strategy;
 const crypto = require("crypto")
-const app = express()
+const app = express();
 const port = 3000;
+const fs = require("fs");
 const bodyParser = require('body-parser');
 const mysql = require("mysql")
 var session = require('express-session');
-const { waitForDebugger } = require('inspector');
-const { resolve } = require('path');
-const { type } = require('os');
+const { userInfo } = require('os');
 var MySQLStore = require('express-mysql-session')(session);
 
-
-
-
-
-
-app.use(session({
-    key: 'session_cookie_name',
-    secret: 'session_cookie_secret',
-    store: new MySQLStore({
-        host: 'localhost',
-        port:3306,
-        user:'root',
-        password:'Dogdog12',
-        database:'cookie_user'
-    }),
-    resave:false,
-    saveUninitialized: false,
-    cookie:{
-        maxAge:1000*60*60*24
-    }
-}));
-
-
-
-
+const rawData = fs.readFileSync('./dataStores/databaseinfo.txt');
+const databaseInfo = JSON.parse(rawData);
 
 
 
 //Middleware Setup
-app.use(passport.initialize());
-app.use(passport.session());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static('public'))
 app.set('view engine', 'pug')
 
+
+
 var connection = mysql.createConnection({
-    host: "localhost",
-    port:3306,
-    user: "root",
-    password:'Dogdog12',
+    host: databaseInfo["Host"],
+    port: databaseInfo["Port"],
+    user: databaseInfo["User"],
+    password: databaseInfo["Password"],
     database: "user",
     multipleStatements: true
 });
+
 connection.connect((err)=>{
     if(!err){
         console.log("Connected");
     }else{
-        console.log(err);
+       // console.log("Connection Error: ",err);
+
     }
 });
+
+var helpedMiddleware = function(middleware){
+    out = function(req,res,next){
+        connection.ping(err =>{
+            if(err){
+            return next()
+        } else {
+            return middleware(req,res,next);
+        }
+      })
+    }   
+    return out;
+ }
+
+
+app.use(helpedMiddleware( session({
+                key: 'session_cookie_name',
+                secret: 'session_cookie_secret',
+                store: new MySQLStore({
+                    host: databaseInfo["Host"],
+                    port: databaseInfo["Port"],
+                    user: databaseInfo["User"],
+                    password: databaseInfo["Password"],
+                    database:'cookie_user'
+                }),
+                resave:false,
+                saveUninitialized: false,
+                cookie:{
+                    maxAge:1000*60*60*24
+                }
+            })))
+
+
+
+
+app.use(helpedMiddleware(passport.initialize()));
+app.use(helpedMiddleware(passport.session()));
 
 
 const customFields={
@@ -135,6 +151,16 @@ function isAuth(req,res,next)
    }
 }
 
+function isConnected (req, res, next){
+    connection.ping(err =>{
+        if(err){
+            res.render("Admin-Settings", databaseInfo)
+        } else {
+            next()
+        }
+    });
+
+}
 
 function isAdmin(req,res,next)
 {
@@ -380,6 +406,31 @@ async function getUserInfoById(user_id){
                                         "id":element["id"],
                                         "username":element["username"]
                         }
+            });
+            resolve(out);        
+       }
+       else
+       {
+           //console.log("No Hours found")
+           resolve([])
+       }
+    })
+  })
+}
+
+async function getUserInfoByUserName(userName){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select id from users where username = ?', [userName], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out = element["id"]
             });
             resolve(out);        
        }
@@ -746,7 +797,7 @@ app.use((req,res,next)=>{
 
 
 // Routes
-app.get('/', async(req, res, next) => {
+app.get('/', isConnected, async(req, res, next) => {
     //createMonth("March", 2022)
     //const ids = await compileWeekSchedulingObj(4,4,0);
     //console.log(ids)
@@ -755,7 +806,7 @@ app.get('/', async(req, res, next) => {
     var info = {"username" : "Log In"};
     date = getCurrentMonthandWeek();
     confirmation = await createMonthIfNotExist(date["month"], currentYear())
-    res.render('index', info)
+    res.render('index')
 });
 
 app.get('/index', (req, res, next) => {
@@ -763,33 +814,58 @@ app.get('/index', (req, res, next) => {
     res.redirect('/')
 });
 
-app.get('/Trade-Shift',isAuth, async(req, res, next) => {
+app.get('/Trade-Shift',isConnected,isAuth, async(req, res, next) => {
 
     res.render('Trade-Shift')
 
 });
 
-app.get('/User-Management',isAuth, async(req, res, next) => {
+app.get('/User-Management',isConnected,isAuth, async(req, res, next) => {
 
     res.render('User-Management')
 
 });
 
-app.get('/New-Password', isAuth, (req, res, next) => {
-
-    res.render('New-Password')
-
-});
-
-app.get('/User-Settings', isAuth, (req, res, next) => {
-
-    res.render('User-Settings')
+app.get('/New-Password', isConnected,(req, res, next) => {
+    res.render('New-Password', {"Username": req.user.username})
 
 });
 
+app.get('/User-Settings', isConnected, isAuth, (req, res, next) => {
+    console.log(req.user)
+    var userInfo = {
+        "UserId": req.user.id,
+        "FName": req.user.fname,
+        "LName": req.user.lname,
+        "Email": req.user.username,
+        "Birthday": req.user.birthday,
+        "Phone": req.user.phone
+    }
+    res.render('User-Settings', userInfo)
+
+});
+
+app.post('/User-Settings', (req, res, next)=>{
+    user = req.body
+    connection.query('UPDATE `users` SET fname=?, lname=?, username=?, birthday=?, phone=? WHERE id=? ', [user.First_Name, user.Last_Name, user.Email, user.Birthday, user.Phone, user.UserId], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+
+    res.redirect('/');
+})
 
 
-app.get('/Full-Schedule',isAuth, async(req, res, next) => {
+
+app.get('/Full-Schedule',isConnected,isAuth, async(req, res, next) => {
     fullInfo = {}
     currDate = getCurrentMonthandWeek()
     fullInfo["DateInfo"] = {
@@ -808,8 +884,9 @@ app.get('/Full-Schedule',isAuth, async(req, res, next) => {
     res.render('Full-Schedule', fullInfo);
 });
 
-app.get('/My-Schedule',isAuth, async(req, res, next) => {
+app.get('/My-Schedule',isConnected,isAuth, async(req, res, next) => {
     fullInfo = {}
+    console.log("SHouldgnt get hit")
     currDate = getCurrentMonthandWeek()
     fullInfo["DateInfo"] = {
         "Day": currDate["day"],
@@ -827,37 +904,46 @@ app.get('/My-Schedule',isAuth, async(req, res, next) => {
 });
 
 
+app.get('/Forgot-Password',isConnected, (req, res, next)=>{
+    res.render('Forgot-Password');
+})
+
+app.post('/Forgot-Password', isConnected,(req, res, next)=>{
+    console.log(req.body.username)
+    res.render('New-Password', {"Username":req.body.username})
+})
 
 
-app.get('/login', (req, res, next) => {
+app.get('/login', isConnected,(req, res, next) => {
         res.render('login');
 });
-app.get('/logout', (req, res, next) => {
+app.get('/logout', isConnected,(req, res, next) => {
     req.logout(); //delets the user from the session
     res.redirect('/login');
 });
-app.get('/login-success', (req, res, next) => {
+app.get('/login-success', isConnected,(req, res, next) => {
     res.send('<p>You successfully logged in. --> <a href="/protected-route">Go to protected route</a></p>');
 });
 
-app.get('/login-failure', (req, res, next) => {
+app.get('/login-failure', isConnected,(req, res, next) => {
     res.send('You entered the wrong password.');
 });
 
 
-app.get('/register', (req, res, next) => {
+app.get('/register', isConnected,(req, res, next) => {
     console.log("Inside get");
     res.render('register')
     
 });
 
-app.post('/New-Password', (req,res, next)=>{
+app.post('/New-Password', async (req,res, next)=>{
 
+    const userId = await getUserInfoByUserName(req.body.Username);
     const saltHash=genPassword(req.body.password);
     const salt=saltHash.salt;
     const hash=saltHash.hash;
 
-    connection.query('UPDATE `users` SET hash=?, salt=? WHERE id=? ', [hash, salt, req.user.id], function(error, results, fields) {
+    connection.query('UPDATE `users` SET hash=?, salt=? WHERE id=? ', [hash, salt, userId], function(error, results, fields) {
         if (error) 
             {
                 console.log("Error Inserting");
@@ -907,7 +993,7 @@ app.post('/PlaceWorker', (req, res, next)=>{
 
 app.post('/login',passport.authenticate('local',{failureRedirect:'/login-failure',successRedirect:'/'}));
 
-app.get('/protected-route',isAuth,(req, res, next) => {
+app.get('/protected-route',isConnected,isAuth,(req, res, next) => {
  
     res.send('<h1>You are authenticated</h1><p><a href="/logout">Logout and reload</a></p>');
 });
@@ -934,9 +1020,21 @@ app.get('/userAlreadyExists', (req, res, next) => {
     
 });
 
+app.get('/Admin-Settings', isConnected, (req, res, next)=>{
+    res.render("Admin-Settings", databaseInfo)
+})
+
+app.post('/Admin-Settings', (req, res, next) =>{
+    fs.writeFileSync('./dataStores/databaseinfo.txt', JSON.stringify(req.body))
+    res.sendStatus(200)
+})
+
+app.get('/Notifications', isConnected, isAuth,(req,res,next)=>{
+    res.render("Notifications")
+})
+
 
 //Start App
-
 app.listen(port, function() {
     console.log('App listening on port %d!',port)
   });

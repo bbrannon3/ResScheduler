@@ -8,7 +8,7 @@ html(style='font-size: 16px;')
     meta(name='page_type' content='np-template-header-footer-from-plugin')
     title Forgot Password
     link(rel='stylesheet' href='css/nicepage.css' media='screen')
-    link(rel='stylesheet' href='css/Login.css' media='screen')
+    link(rel='stylesheet' href='css/Notifications.css' media='screen')
     script.u-script(type='text/javascript' src='js/jquery.js' defer='')
     script.u-script(type='text/javascript' src='js/nicepage.js' defer='')
     script(src='https://kit.fontawesome.com/827e17ac31.js' crossorigin='anonymous')
@@ -79,14 +79,80 @@ html(style='font-size: 16px;')
             i.fa-solid.fa-bell.fa-2xl.u-icon-1
             i.fa-solid.fa-circle.u-icon-1
     .container
-      // Begin log form
-      .log-form
-        h2 Enter New Password
-        form(action='New-Password' method='post')
-          input(type="hidden" name="Username" value= Username)
-          input(type='password' name='password' placeholder='Enter new password')
-          input(type='password' title='password' placeholder='Verify new password')
-          button.btn(type='submit') Submit
-      // end log form
+      section.section-50
+        .container
+          h3.m-b-50.heading-line
+            | Notifications 
+            i.fa.fa-bell.text-muted
+          .notification-ui_dd-content
+            .notification-list.notification-list--unread
+              .notification-list_content
+                .notification-list_img
+                .notification-list_detail
+                  p
+                    b Aryan
+                    |  reacted to your post
+                  p.text-muted Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde, dolorem.
+                  p.text-muted
+                    small 10 mins ago
+              .notification-list_feature-img
+            .notification-list.notification-list--unread
+              .notification-list_content
+                .notification-list_img
+                .notification-list_detail
+                  p
+                    b Raj Kumar
+                    |  liked your post
+                  p.text-muted Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde, dolorem.
+                  p.text-muted
+                    small 10 mins ago
+              .notification-list_feature-img
+            .notification-list.notification-list--read
+              .notification-list_content
+                .notification-list_img
+                .notification-list_detail
+                  p
+                    b Rakesh
+                    |  reacted to your post
+                  p.text-muted Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde, dolorem.
+                  p.text-muted
+                    small 10 mins ago
+              .notification-list_feature-img
+            .notification-list.notification-list--read
+              .notification-list_content
+                .notification-list_img
+                .notification-list_detail
+                  p
+                    b Bittu
+                    |  reacted to your post
+                  p.text-muted Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde, dolorem.
+                  p.text-muted
+                    small 10 mins ago
+              .notification-list_feature-img
+            .notification-list.notification-list--unread
+              .notification-list_content
+                .notification-list_img
+                .notification-list_detail
+                  p
+                    b Prince
+                    |  reacted to your post
+                  p.text-muted Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde, dolorem.
+                  p.text-muted
+                    small 10 mins ago
+              .notification-list_feature-img
+            .notification-list.notification-list--read
+              .notification-list_content
+                .notification-list_img
+                .notification-list_detail
+                  p
+                    b Adi Shots
+                    |  reacted to your post
+                  p.text-muted Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde, dolorem.
+                  p.text-muted
+                    small 10 mins ago
+              .notification-list_feature-img
+          .text-center
+            a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-2.text-center(href='#') Load more activity
+      p  
     footer.custom-footer
       .text-center.p-3

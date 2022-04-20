@@ -6,16 +6,24 @@ html(style='font-size: 16px;')
     meta(name='keywords' content='')
     meta(name='description' content='')
     meta(name='page_type' content='np-template-header-footer-from-plugin')
-    title Forgot Password
+    title Admin Settings
     link(rel='stylesheet' href='css/nicepage.css' media='screen')
-    link(rel='stylesheet' href='css/Login.css' media='screen')
+    link(rel='stylesheet' href='css/Admin-Settings.css' media='screen')
     script.u-script(type='text/javascript' src='js/jquery.js' defer='')
     script.u-script(type='text/javascript' src='js/nicepage.js' defer='')
+    script.u-script(type='text/javascript' src='js/inputDataGrab.js' defer='')
     script(src='https://kit.fontawesome.com/827e17ac31.js' crossorigin='anonymous')
-    link(href='https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css' rel='stylesheet')
+    meta(name='generator' content='Nicepage 4.8.2, nicepage.com')
     link#u-theme-google-font(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i')
+    link#u-page-google-font(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i')
+    script(type='application/ld+json').
+      {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "name": "Site1"
+      }
     meta(name='theme-color' content='#478ac9')
-    meta(property='og:title' content='New Password')
+    meta(property='og:title' content='Admin Settings')
     meta(property='og:description' content='')
     meta(property='og:type' content='website')
   body.u-body.u-xl-mode
@@ -42,7 +50,7 @@ html(style='font-size: 16px;')
               li.u-nav-item
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Login' style='padding: 10px 20px;') Login
               li.u-nav-item
-                a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
+                a.u-button-style.u-nav-link(href='#' style='padding: 10px 20px;') Admin Pages
                 .u-nav-popup
                   ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
                     li.u-nav-item
@@ -78,15 +86,37 @@ html(style='font-size: 16px;')
           a(href='Notifications')
             i.fa-solid.fa-bell.fa-2xl.u-icon-1
             i.fa-solid.fa-circle.u-icon-1
-    .container
-      // Begin log form
-      .log-form
-        h2 Enter New Password
-        form(action='New-Password' method='post')
-          input(type="hidden" name="Username" value= Username)
-          input(type='password' name='password' placeholder='Enter new password')
-          input(type='password' title='password' placeholder='Verify new password')
-          button.btn(type='submit') Submit
-      // end log form
+    section#sec-f365.u-clearfix.u-custom-color-5.u-section-1
+      .u-clearfix.u-sheet.u-sheet-1
+        h1.u-custom-font.u-text.u-text-custom-color-3.u-text-default.u-text-1 Application Settings
+        p.u-custom-font.u-text.u-text-custom-color-3.u-text-default.u-text-2 Adjust administrative application settings here.
+    section#sec-b585.u-align-left.u-clearfix.u-custom-color-5.u-section-2
+      .u-clearfix.u-sheet.u-sheet-1
+        .u-list.u-list-1
+          .u-repeater.u-repeater-1
+            .u-container-style.u-list-item.u-repeater-item
+              .u-container-layout.u-similar-container.u-valign-middle.u-container-layout-1
+                .u-clearfix.u-custom-html.u-custom-html-1
+                  input(type='text' title='Host' value= Host)
+            .u-container-style.u-list-item.u-repeater-item
+              .u-container-layout.u-similar-container.u-valign-middle.u-container-layout-2
+                .u-clearfix.u-custom-html.u-custom-html-2
+                  input(type='text' title='Port' value= Port)
+            .u-container-style.u-list-item.u-repeater-item
+              .u-container-layout.u-similar-container.u-valign-middle.u-container-layout-3
+                .u-clearfix.u-custom-html.u-custom-html-3
+                  input(type='text' title='User' value= User)
+            .u-container-style.u-list-item.u-repeater-item
+              .u-container-layout.u-similar-container.u-valign-middle.u-container-layout-4
+                .u-clearfix.u-custom-html.u-custom-html-4
+                  input(type='text' title='Password' value= Password)
+        p.u-align-left.u-large-text.u-text.u-text-default.u-text-variant.u-text-1 MySQL URL: 
+        p.u-large-text.u-text.u-text-default.u-text-variant.u-text-2 MySQL Port: 
+        p.u-large-text.u-text.u-text-default.u-text-variant.u-text-3 MySQL Username: 
+        p.u-large-text.u-text.u-text-default.u-text-variant.u-text-4 MySQL Password: 
+        a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-1(href='#') Back
+        a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-2(href='#' onclick='submitInputs()') Apply
+    section#sec-cf91.u-align-center.u-clearfix.u-custom-color-5.u-section-2
+      .u-align-left.u-clearfix.u-sheet.u-sheet-1
     footer.custom-footer
       .text-center.p-3
