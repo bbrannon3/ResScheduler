@@ -124,7 +124,7 @@ html(style='font-size: 16px;')
                   td.u-border-1.u-border-grey-dark-1.u-table-cell
                     button.btn(type='button' data-toggle='modal' data-target='#rolepopup' onclick='modalFind(\''+role['Name']+'\',\'#'+role["Color"]+'\', \''+role["Id"]+'\')')
                       i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
-                    a(href='#')
+                    button.btn(type='button' onclick='deleteRole(\''+role["Id"]+'\')')
                       i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
 
             

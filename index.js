@@ -227,6 +227,33 @@ function deleteUserById(user_id){
     });
 }
 
+function deleteRoleById(role_id){
+
+    connection.query('Delete from shift_info where Shift_Role=? ', [role_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
+    connection.query('Delete from shift_roles where ID=? ', [role_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+}
+
 async function getScheduleWeeksIDsForMonth(month_id){
     return new Promise(resolve =>{
     out = [];
@@ -1088,6 +1115,13 @@ app.post('/User-Management', isAuth, async(req,res, next)=>{
     
 })
 
+app.post('/Delete-Role', isAuth, async(req,res, next)=>{
+    
+        deleteRoleById(req.body.Id);
+        res.sendStatus(200);
+    
+})
+
 app.get('/New-Password', isConnected,(req, res, next) => {
     res.render('New-Password', {"Username": req.user.username})
 
@@ -1362,6 +1396,8 @@ app.post('/Role-Management', async(req, res, next)=>{
        
     });
  }
+
+ res.sendStatus(200);
 })
 
 

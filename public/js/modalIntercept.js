@@ -1,5 +1,6 @@
 const SHIFT_ROLE = '/Role-Management'
 const SHIFT_POST = '/PlaceWorker'
+const ROLE_DELETE = '/Delete-Role'
 
 function modalFind(name, color,id){
     form = document.getElementsByClassName("pop-up-hidden").item(0)
@@ -135,5 +136,21 @@ function submitShift(){
 function closePop(){
     form = document.getElementsByClassName("pop-up-visable").item(0)
     form.setAttribute('class', 'pop-up-hidden');
+}
+
+
+function deleteRole(id){
+    var out = {"Id": id};
+
+    fetch(ROLE_DELETE,{
+        method : 'POST',
+        body : JSON.stringify(out),
+        headers : {
+            'content-type' : 'application/json'
+        }
+    }).then((response)=>{
+        location.reload()
+    })
+
 }
 
