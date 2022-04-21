@@ -6,7 +6,7 @@
 	<meta content="" name="keywords">
 	<meta content="" name="description">
 	<meta content="np-template-header-footer-from-plugin" name="page_type">
-	<title>Role Management</title>
+	<title>Request Off Approval</title>
 	<link href="css/nicepage.css" media="screen" rel="stylesheet">
 	<link href="css/User-Management.css" media="screen" rel="stylesheet">
 	<script class="u-script" defer src="js/jquery.js" type="text/javascript">
@@ -17,12 +17,8 @@
 	<meta content="Nicepage 4.6.5, nicepage.com" name="generator">
 	<link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i" id="u-theme-google-font" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" id="u-page-google-font" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	<meta content="#478ac9" name="theme-color">
-	<meta content="User Management" property="og:title">
+	<meta content="Request Off Approval" property="og:title">
 	<meta content="" property="og:description">
 	<meta content="website" property="og:type">
 </head>
@@ -128,10 +124,12 @@
 			<p class="u-text u-text-default u-text-1"><a href="Notifications.html"><i class="fa-solid fa-bell fa-2xl u-icon-1"></i><i class="fa-solid fa-circle u-icon-1"></i></a></p>
 		</div>
 	</header>
+
+
 	<section class="u-clearfix u-custom-color-5 u-section-1" id="sec-f365">
 		<div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
-			<h1 class="u-custom-font u-text u-text-custom-color-3 u-text-default u-text-1">Manage Roles</h1>
-			<p class="u-custom-font u-text u-text-custom-color-3 u-text-default u-text-2">Create and modify shift roles.</p>
+			<h1 class="u-custom-font u-text u-text-custom-color-3 u-text-default u-text-1">Approve or Deny Shift Trades</h1>
+			<p class="u-custom-font u-text u-text-custom-color-3 u-text-default u-text-2">Below is the requests for shift trades. You may approve or deny from this page.</p>
 		</div>
 	</section>
 	<section class="u-align-center u-clearfix u-custom-color-5 u-section-2" id="sec-cf91">
@@ -139,59 +137,43 @@
 			<div class="u-align-center u-table u-table-responsive u-table-1">
 				<table class="u-table-entity">
 					<colgroup>
-						<col width="33%">
-						<col width="33%">
-						<col width="33%">
+						<col width="25%">
+						<col width="25%">
+						<col width="25%">
+						<col width="25%">
 					</colgroup>
 					<thead class="u-align-center u-custom-color-3 u-custom-font u-table-header u-table-header-1">
 						<tr style="height: 12px;">
-							<th class="u-border-1 u-border-grey-dark-1 u-table-cell">Role</th>
-							<th class="u-border-1 u-border-grey-dark-1 u-table-cell">Users Assigned</th>
+							<th class="u-border-1 u-border-grey-dark-1 u-table-cell">User</th>
+							<th class="u-border-1 u-border-grey-dark-1 u-table-cell">Shift</th>
+							<th class="u-border-1 u-border-grey-dark-1 u-table-cell">Reason</th>
 							<th class="u-border-1 u-border-grey-dark-1 u-table-cell">Actions</th>
 						</tr>
 					</thead>
 					<tbody class="u-align-center u-custom-font u-table-body u-text-custom-color-3 u-white u-table-body-1">
 						<tr style="height: 12px;">
-							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">Administrator<br></td>
-							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">1</td>
-							<td class="u-border-1 u-border-grey-dark-1 u-table-cell"><button type="button" class="btn" data-toggle="modal" data-target="#rolepopup"><i class="fa-regular fa-lg icon-primary-color fa-pen-to-square"></i></button>&nbsp;&nbsp;<a href="#"><i class="fa-regular fa-lg icon-primary-color fa-trash-can"></i></a></td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">tschmidt3<br></td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">Shift Value</td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">Funeral</td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell"><a href="#"><i class="fa-solid fa-check icon-primary-color fa-lg"></i></a>&nbsp;&nbsp;<a href="#"><i class="fa-solid fa-lg icon-primary-color fa-x"></i></a></td>
+						</tr>
+						<tr style="height: 25px;">
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">podom1</td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">Shift Value</td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">Study Time</td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell"><a href="#"><i class="fa-solid fa-check icon-primary-color fa-lg"></i></a>&nbsp;&nbsp;<a href="#"><i class="fa-solid fa-lg icon-primary-color fa-x"></i></a></td>
 						</tr>
 						<tr style="height: 12px;">
-							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">Manager<br></td>
-							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">3</td>
-							<td class="u-border-1 u-border-grey-dark-1 u-table-cell"><button type="button" class="btn" data-toggle="modal" data-target="#rolepopup"><i class="fa-regular fa-lg icon-primary-color fa-pen-to-square"></i></button>&nbsp;&nbsp;<a href="#"><i class="fa-regular fa-lg icon-primary-color fa-trash-can"></i></a></td>
-						</tr>
-						<tr style="height: 12px;">
-							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">Student User<br></td>
-							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">12</td>
-							<td class="u-border-1 u-border-grey-dark-1 u-table-cell"><button type="button" class="btn" data-toggle="modal" data-target="#rolepopup"><i class="fa-regular fa-lg icon-primary-color fa-pen-to-square"></i></button>&nbsp;&nbsp;<a href="#"><i class="fa-regular fa-lg icon-primary-color fa-trash-can"></i></a></td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">bbrannon3</td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">Shift Value</td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell">Sick</td>
+							<td class="u-border-1 u-border-grey-dark-1 u-table-cell"><a href="#"><i class="fa-solid fa-check icon-primary-color fa-lg"></i></a>&nbsp;&nbsp;<a href="#"><i class="fa-solid fa-lg icon-primary-color fa-x"></i></a></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</section>
-
-<!-- Modal -->
-<div class="modal fade" id="rolepopup" tabindex="-1" role="dialog" aria-labelledby="rolepopuplabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body text-center">
-            <iframe src="Role-Popup.html" title="editrole" height="350" width="400"></iframe> 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <footer class="custom-footer">
 		<div class="text-center p-3"></div>
 	</footer>
