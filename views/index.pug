@@ -53,7 +53,7 @@ html(style='font-size: 16px;')
                     li.u-nav-item
                       a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
               li.u-nav-item
-               if !User['Authenticated']
+                if !User['Authenticated']
                   a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Login' style='padding: 10px 20px;') Login
                 else
                   a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Logout' style='padding: 10px 20px;') Logout

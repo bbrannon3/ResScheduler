@@ -1134,7 +1134,6 @@ app.get('/Full-Schedule',isConnected,isAuth, async(req, res, next) => {
     }
     fullInfo["Users"] = await getAllUsersWithRole();
     fullInfo["Roles"] = await getAllShiftRoles();
-    console.log("Sched: " + currDate["week"])
     fullInfo["info"] = await compileWeekSchedulingObjAllUsers(await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
     //console.log(fullInfo["info"])
     res.render('Full-Schedule', fullInfo);
@@ -1154,7 +1153,8 @@ app.get('/My-Schedule',isConnected,isAuth, async(req, res, next) => {
         "userId" : req.user.id,
         "userName" : req.user.username
     }
-    console.log("Sched: " + currDate["week"])
+    fullInfo["Users"] = await getAllUsersWithRole();
+    fullInfo["Roles"] = await getAllShiftRoles();
     fullInfo["info"] = await compileWeekSchedulingObj(req.user.id, await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
     res.render('my-Schedule', fullInfo);
 });
