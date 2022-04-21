@@ -155,11 +155,15 @@ html(style='font-size: 16px;')
               tr
                 td.tg-vr4i(rowspan='1')= val 
                 - for(x = 0; x < 24; x++)
-                  td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="transferShiftData(\'"+ info[key][x]["HourId"] +"\', \'"+x+"\', \'"+val+"\')")= info[key][x]["WorkerName"]
-                    //form(action="/PlaceWorker" method="POST" style={height: "100%", width: "100%"})
-                      input(type="hidden" value= info[key][x]["HourId"] name="Hour_Id")
-                      input(type="hidden" value= user["userId"] name="User_Id")
-                      div(onclick="this.parentNode.submit()" style={height: "25px", width: "25px", cursor: "pointer"})
+                  if user["isAdmin"]
+                    td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="transferShiftData(\'"+ info[key][x]["HourId"] +"\', \'"+x+"\', \'"+val+"\')")= info[key][x]["WorkerName"]
+                  else
+                    td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"])= info[key][x]["WorkerName"]
+                      form(action="/Trade-Shift" method="POST" style={height: "100%", width: "100%"})
+                        input(type="hidden" value= info[key][x]["HourId"] name="Hour_Id")
+                        input(type="hidden" value= user["userId"] name="User_Id")
+                        input(type='hidden' value= info[key][x]["WorkerName"] name="Worker_Name")
+                        div(onclick="this.parentNode.submit()" style={height: "25px", width: "25px", cursor: "pointer"})
       p  
       p 
     footer.custom-footer

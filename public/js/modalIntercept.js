@@ -23,7 +23,10 @@ function submitShiftRole(){
         headers : {
             'content-type' : 'application/json'
         }
+    }).then((response)=>{
+        window.location.reload()
     })
+
     }
 
 function transferShiftData(hour, hour_place, day){

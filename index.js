@@ -1051,6 +1051,12 @@ app.get('/Trade-Shift',isConnected,isAuth, async(req, res, next) => {
 
 });
 
+app.post('/Trade-Shift',isConnected,isAuth, async(req, res, next) => {
+    console.log(req.body)
+    res.render('Trade-Shift')
+
+});
+
 app.get('/User-Management',isConnected,isAuth, async(req, res, next) => {
     var users = await getAllUsersWithRole()
     var roles = await getAllUserRoles();
@@ -1071,7 +1077,8 @@ app.post('/User-Management', isAuth, async(req,res, next)=>{
             "LName": user.lname,
             "Email": user.email,
             "Birthday": user.birthday,
-            "Phone": user.phone
+            "Phone": user.phone,
+            "Avalability" : await getAvalabilityById(user.id)
         }
         res.render('User-Settings', userInfo)
     } else {
@@ -1149,10 +1156,16 @@ app.get('/My-Schedule',isConnected,isAuth, async(req, res, next) => {
         "Month": getMonthFromValue(currDate["month"]),
         "Year": currentYear()
     }
+
     fullInfo["user"] = {
         "userId" : req.user.id,
-        "userName" : req.user.username
+        "userName" : req.user.username,
+        "isAdmin" : req.user.isAdmin
     }
+
+    console.log(fullInfo["user"])
+
+
     fullInfo["Users"] = await getAllUsersWithRole();
     fullInfo["Roles"] = await getAllShiftRoles();
     fullInfo["info"] = await compileWeekSchedulingObj(req.user.id, await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
