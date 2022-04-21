@@ -28,5 +28,5 @@ function submitUserSettings(){
         headers : {
             'content-type' : 'application/json'
         }
-    });
+    })
     }

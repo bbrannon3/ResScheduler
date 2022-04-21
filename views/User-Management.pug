@@ -119,57 +119,22 @@ html(style='font-size: 16px;')
                 th.u-border-1.u-border-grey-dark-1.u-table-cell Phone
                 th.u-border-1.u-border-grey-dark-1.u-table-cell Actions
             tbody.u-align-center.u-custom-font.u-table-body.u-text-custom-color-3.u-white.u-table-body-1
-              tr(style='height: 12px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  | tschmidt3
-                  br
-                td.u-border-1.u-border-grey-dark-1.u-table-cell User
-                td.u-border-1.u-border-grey-dark-1.u-table-cell tschmidt3@atu.edu
-                td.u-border-1.u-border-grey-dark-1.u-table-cell (479) 280-9825
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
-              tr(style='height: 25px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell podom1
-                td.u-border-1.u-border-grey-dark-1.u-table-cell Admin
-                td.u-border-1.u-border-grey-dark-1.u-table-cell podom1@atu.edu
-                td.u-border-1.u-border-grey-dark-1.u-table-cell (479) 880-4040
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
-              tr(style='height: 12px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell bbrannon3
-                td.u-border-1.u-border-grey-dark-1.u-table-cell Admin
-                td.u-border-1.u-border-grey-dark-1.u-table-cell bbrannon3@atu.edu
-                td.u-border-1.u-border-grey-dark-1.u-table-cell (123) 456-7890
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
-              tr(style='height: 12px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell nhornbeck
-                td.u-border-1.u-border-grey-dark-1.u-table-cell User
-                td.u-border-1.u-border-grey-dark-1.u-table-cell nhornbeck@atu.edu
-                td.u-border-1.u-border-grey-dark-1.u-table-cell (123) 456-7890
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
-              tr(style='height: 12px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell dmeeks
-                td.u-border-1.u-border-grey-dark-1.u-table-cell User
-                td.u-border-1.u-border-grey-dark-1.u-table-cell dmeeks@atu.edu
-                td.u-border-1.u-border-grey-dark-1.u-table-cell (123) 456-7890
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
+              each user in Users
+                tr(style='height: 12px;')
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell= user.UserName
+                    br
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell= user.Role
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell= user.Email
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell= user.Phone
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell
+                   form(action="/User-Management" method="POST")
+                      input(type="hidden" value="Edit" name="Action")
+                      input(type="hidden" value= user.id name="userId")
+                      button(onclick="this.parentNode.submit()")
+                        i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
+                      button(onclick="this.parentNode.Action.value = 'Delete'; this.parentNode.submit()")
+                        i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
+
+
     footer.custom-footer
       .text-center.p-3

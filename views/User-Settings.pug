@@ -114,6 +114,8 @@ html(style='font-size: 16px;')
         p.u-large-text.u-text.u-text-default.u-text-variant.u-text-4 Phone: 
         p.u-large-text.u-text.u-text-default.u-text-variant.u-text-5 Birthday: 
         a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-1(href='#' onclick="submitUserSettings()") Update
-        a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-1(href='New-Password') Change Password
+        form(action='/Forgot-Password' method='POST')
+          input(type="hidden" value= UserId name="userId")
+          a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-1(href='#' onclick="this.parentNode.submit()") Change Password
     footer.custom-footer
       .text-center.p-3

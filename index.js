@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const mysql = require("mysql")
 var session = require('express-session');
 const { userInfo } = require('os');
+const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 var MySQLStore = require('express-mysql-session')(session);
 
 const rawData = fs.readFileSync('./dataStores/databaseinfo.txt');
@@ -142,7 +143,7 @@ function isAuth(req,res,next)
 {
    if(req.isAuthenticated())
    {
-       console.log(req)
+       //console.log(req)
        next();
    }
    else
@@ -162,9 +163,13 @@ function isConnected (req, res, next){
 
 }
 
+function redirect(path, req, res, next){
+    res.render(path);
+}
+
 function isAdmin(req,res,next)
 {
-   if(req.isAuthenticated() && req.user.isAdmin==1)
+   if(req.isAuthenticated() && req.user.isAdmin==0)
    {
        next();
    }
@@ -191,6 +196,34 @@ function userExists(req,res,next)
        }
       
    });
+}
+
+function deleteUserById(user_id){
+
+    connection.query('Delete from shift_info where Worker_ID=? ', [user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
+
+    connection.query('Delete from users where id=? ', [user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
 }
 
 async function getScheduleWeeksIDsForMonth(month_id){
@@ -393,7 +426,7 @@ function createScheduleHour(hourId, workerId, shiftRole, woCount = 0){
 async function getUserInfoById(user_id){
     return new Promise(resolve =>{
     out = {};
-    connection.query('Select id, username from users where id = ?', [user_id], function(error, results, fields){
+    connection.query('Select id, username, fname, lname, email, phone, birthday from users where id = ?', [user_id], function(error, results, fields){
         if (error) 
            {
                console.log(error);
@@ -404,14 +437,20 @@ async function getUserInfoById(user_id){
             results.forEach(element => {
                 out = { 
                                         "id":element["id"],
-                                        "username":element["username"]
+                                        "username":element["username"],
+                                        "fname":element["fname"],
+                                        "lname":element["lname"],
+                                        "email":element["email"],
+                                        "phone":element["phone"],
+                                        "birthday":element["birthday"]
                         }
             });
+            
             resolve(out);        
        }
        else
        {
-           //console.log("No Hours found")
+           console.log("No Hours found")
            resolve([])
        }
     })
@@ -431,6 +470,96 @@ async function getUserInfoByUserName(userName){
             
             results.forEach(element => {
                 out = element["id"]
+            });
+            resolve(out);        
+       }
+       else
+       {
+           //console.log("No Hours found")
+           resolve([])
+       }
+    })
+  })
+}
+
+
+async function getUserRoleInfoById(role_id){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select role_name from user_roles where iduser_roles = ?', [role_id], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out = { 
+                                        "Name":element["role_name"]
+                        }
+            });
+            resolve(out);        
+       }
+       else
+       {
+          
+           resolve([])
+       }
+    })
+  })
+}
+
+
+async function getAllUserRoles(){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select iduser_roles, role_name from user_roles ', function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out[element["iduser_roles"]] = {     
+                    "Name":element["role_name"]
+                        }
+            });
+            resolve(out);        
+       }
+       else
+       {
+          
+           resolve([])
+       }
+    })
+  })
+}
+
+async function getAllUsersWithRole(){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select id, username, phone, isAdmin, email from users',  async(error, results, fields)=>{
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            var i = 0;
+            results.forEach(element => {
+                //role = await getUserRoleInfoById(element["isAdmin"])["Name"]
+                out[i] = { 
+                          "id":element["id"],
+                          "UserName":element["username"],
+                          "Email": element["email"],
+                          "Phone": element["phone"],
+                          "Role": element["isAdmin"]
+                        }
+                i += 1;
+            
             });
             resolve(out);        
        }
@@ -821,10 +950,34 @@ app.get('/Trade-Shift',isConnected,isAuth, async(req, res, next) => {
 });
 
 app.get('/User-Management',isConnected,isAuth, async(req, res, next) => {
-
-    res.render('User-Management')
+    var users = await getAllUsersWithRole()
+    var roles = await getAllUserRoles();
+    for(var key in users){
+        users[key]["Role"] = roles[users[key]["Role"]]["Name"];
+    }
+    res.render('User-Management', {"Users":users})
 
 });
+
+app.post('/User-Management', isAuth, async(req,res, next)=>{
+    
+    if(req.body.Action === "Edit"){
+        var user = await getUserInfoById(req.body.userId)
+        var userInfo = {
+            "UserId": user.id,
+            "FName": user.fname,
+            "LName": user.lname,
+            "Email": user.email,
+            "Birthday": user.birthday,
+            "Phone": user.phone
+        }
+        res.render('User-Settings', userInfo)
+    } else {
+        deleteUserById(req.body.userId);
+        res.redirect('/User-Management')
+    }
+    
+})
 
 app.get('/New-Password', isConnected,(req, res, next) => {
     res.render('New-Password', {"Username": req.user.username})
@@ -832,12 +985,11 @@ app.get('/New-Password', isConnected,(req, res, next) => {
 });
 
 app.get('/User-Settings', isConnected, isAuth, (req, res, next) => {
-    console.log(req.user)
     var userInfo = {
         "UserId": req.user.id,
         "FName": req.user.fname,
         "LName": req.user.lname,
-        "Email": req.user.username,
+        "Email": req.user.email,
         "Birthday": req.user.birthday,
         "Phone": req.user.phone
     }
@@ -847,7 +999,7 @@ app.get('/User-Settings', isConnected, isAuth, (req, res, next) => {
 
 app.post('/User-Settings', (req, res, next)=>{
     user = req.body
-    connection.query('UPDATE `users` SET fname=?, lname=?, username=?, birthday=?, phone=? WHERE id=? ', [user.First_Name, user.Last_Name, user.Email, user.Birthday, user.Phone, user.UserId], function(error, results, fields) {
+    connection.query('UPDATE `users` SET fname=?, lname=?, email=?, birthday=?, phone=? WHERE id=? ', [user.First_Name, user.Last_Name, user.Email, user.Birthday, user.Phone, user.UserId], function(error, results, fields) {
         if (error) 
             {
                 console.log("Error Inserting");
@@ -859,8 +1011,6 @@ app.post('/User-Settings', (req, res, next)=>{
         }
        
     });
-
-    res.redirect('/');
 })
 
 
@@ -908,9 +1058,17 @@ app.get('/Forgot-Password',isConnected, (req, res, next)=>{
     res.render('Forgot-Password');
 })
 
-app.post('/Forgot-Password', isConnected,(req, res, next)=>{
-    console.log(req.body.username)
-    res.render('New-Password', {"Username":req.body.username})
+app.post('/Forgot-Password', isConnected, async (req, res, next)=>{
+    var username = req.body.username
+    
+    if(!username){
+        getUserInfoById(req.body.userId).then(result=>{
+            res.render('New-Password', {"Username": result["username"]})
+        })
+    }else{
+        res.render('New-Password', {"Username": username })
+    }
+    
 })
 
 
@@ -937,8 +1095,7 @@ app.get('/register', isConnected,(req, res, next) => {
 });
 
 app.post('/New-Password', async (req,res, next)=>{
-
-    const userId = await getUserInfoByUserName(req.body.Username);
+    const userId = await getUserInfoByUserName(req.body.Username) || await getUserInfoById(req.body.userId);
     const saltHash=genPassword(req.body.password);
     const salt=saltHash.salt;
     const hash=saltHash.hash;
@@ -963,13 +1120,12 @@ app.post('/New-Password', async (req,res, next)=>{
 
 app.post('/register', userExists,(req,res,next)=>{
     console.log("Inside post");
-    console.log(req.body);
+    //console.log(req.body);
     const saltHash=genPassword(req.body.password);
-    console.log(saltHash);
     const salt=saltHash.salt;
     const hash=saltHash.hash;
 
-    connection.query('INSERT INTO users(username,hash,salt,isAdmin, fname, lname) values(?,?,?,0,?,?) ', [req.body.username,hash,salt,req.body.fname, req.body.lname], function(error, results, fields) {
+    connection.query('INSERT INTO users(username,hash,salt,isAdmin, fname, lname) values(?,?,?,1,?,?) ', [req.body.username,hash,salt,req.body.fname, req.body.lname], function(error, results, fields) {
         if (error) 
             {
                 console.log("Error Inserting");
