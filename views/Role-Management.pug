@@ -6,18 +6,22 @@ html(style='font-size: 16px;')
     meta(content='' name='keywords')
     meta(content='' name='description')
     meta(content='np-template-header-footer-from-plugin' name='page_type')
-    title My Schedule
+    title Role Management
     link(href='css/nicepage.css' media='screen' rel='stylesheet')
-    link(href='css/My-Schedule.css' media='screen' rel='stylesheet')
-    link(href='https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css' rel='stylesheet')
-    script(src='https://kit.fontawesome.com/827e17ac31.js' crossorigin='anonymous')
+    link(href='css/User-Management.css' media='screen' rel='stylesheet')
     script.u-script(defer='' src='js/jquery.js' type='text/javascript')
     script.u-script(defer='' src='js/nicepage.js' type='text/javascript')
+    script(src='https://kit.fontawesome.com/827e17ac31.js' crossorigin='anonymous')
     meta(content='Nicepage 4.6.5, nicepage.com' name='generator')
     link#u-theme-google-font(href='https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i' rel='stylesheet')
-    script(src='https://kit.fontawesome.com/827e17ac31.js')
+    link#u-page-google-font(href='https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i' rel='stylesheet')
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
+    script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous')
+    script(src='https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous')
+    script(src='https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous')
     meta(content='#478ac9' name='theme-color')
-    meta(content='My Schedule' property='og:title')
+    meta(content='User Management' property='og:title')
+    meta(content='' property='og:description')
     meta(content='website' property='og:type')
   body.u-body.u-xl-mode
     header#sec-cd71.u-clearfix.u-custom-color-1.u-header(data-animation-delay='0' data-animation-direction='' data-animation-duration='0' data-animation-name='')
@@ -51,7 +55,7 @@ html(style='font-size: 16px;')
                     li.u-nav-item
                       a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
               li.u-nav-item
-                a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Logout' style='padding: 10px 20px;') Logout
+                a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Login' style='padding: 10px 20px;') Login
           .u-custom-menu.u-nav-container-collapse
             .u-black.u-container-style.u-inner-container-layout.u-opacity.u-opacity-95.u-sidenav
               .u-inner-container-layout.u-sidenav-overflow
@@ -64,7 +68,7 @@ html(style='font-size: 16px;')
                   li.u-nav-item
                     a.u-button-style.u-nav-link(href='Trade-Shift') Trade Shifts
                   li.u-nav-item
-                    a.u-button-style.u-nav-link(href='Logout') Logout
+                    a.u-button-style.u-nav-link(href='Login') Login
                   li.u-nav-item
                     a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
                     .u-nav-popup
@@ -83,73 +87,65 @@ html(style='font-size: 16px;')
           a(href='Notifications')
             i.fa-solid.fa-bell.fa-2xl.u-icon-1
             i.fa-solid.fa-circle.u-icon-1
-    section#sec-99ff.u-clearfix.u-custom-color-5.u-section-1
-      .u-container-style.u-custom-color-1.u-expanded-width.u-group.u-shape-rectangle.u-group-1
-        .u-container-layout.u-container-layout-1
-          a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-1(href='My-Schedule') My Schedule
-          a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-2(href='Full-Schedule') Everyone's Schedule
-      p  
-      p  
-      .container
-        div(style='overflow-x:auto;')
-          // Begin Schedule Table Styling
-          style(type='text/css').
-            .tg  {border-collapse:collapse;border-spacing:0; text-align: center; color:#ffffff;}
-            .tg td{border-color:black;border-style:solid;border-width:1px;font-family:'Roboto';font-size:14px;
-            overflow:hidden;padding:10px 5px;word-break:normal;}
-            .tg th{border-color:black;border-style:solid;border-width:1px;font-family:'Roboto';font-size:14px;
-            font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
-            .tg .tg-vr4i{background-color:#7F9976;font-family:'Roboto';text-align:center;vertical-align:top}
-            .tg .tg-baqh{text-align:center;vertical-align:top}
-            .tg .tg-0lax{text-align:left;vertical-align:top}
-          // End Schedule Table Styling
-          // Begin Schedule Table
-          table.tg
-            thead
-              tr
-                th.tg-vr4i(colspan='25')
+    section#sec-f365.u-clearfix.u-custom-color-5.u-section-1
+      .u-clearfix.u-sheet.u-valign-middle.u-sheet-1
+        h1.u-custom-font.u-text.u-text-custom-color-3.u-text-default.u-text-1 Manage Roles
+        p.u-custom-font.u-text.u-text-custom-color-3.u-text-default.u-text-2 Create and modify permission roles.
+    section#sec-cf91.u-align-center.u-clearfix.u-custom-color-5.u-section-2
+      .u-align-left.u-clearfix.u-sheet.u-sheet-1
+        .u-align-center.u-table.u-table-responsive.u-table-1
+          table.u-table-entity
+            colgroup
+              col(width='33%')
+              col(width='33%')
+              col(width='33%')
+            thead.u-align-center.u-custom-color-3.u-custom-font.u-table-header.u-table-header-1
+              tr(style='height: 12px;')
+                th.u-border-1.u-border-grey-dark-1.u-table-cell Role
+                th.u-border-1.u-border-grey-dark-1.u-table-cell Users Assigned
+                th.u-border-1.u-border-grey-dark-1.u-table-cell Actions
+            tbody.u-align-center.u-custom-font.u-table-body.u-text-custom-color-3.u-white.u-table-body-1
+              tr(style='height: 12px;')
+                td.u-border-1.u-border-grey-dark-1.u-table-cell
+                  | Administrator
+                  br
+                td.u-border-1.u-border-grey-dark-1.u-table-cell 1
+                td.u-border-1.u-border-grey-dark-1.u-table-cell
+                  button.btn(type='button' data-toggle='modal' data-target='#rolepopup')
+                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
                   a(href='#')
-                    i.fa-solid.icon-white.fa-caret-left.fa-2xl
-                  strong Week of February 15, 2022
+                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
+              tr(style='height: 12px;')
+                td.u-border-1.u-border-grey-dark-1.u-table-cell
+                  | Manager
+                  br
+                td.u-border-1.u-border-grey-dark-1.u-table-cell 3
+                td.u-border-1.u-border-grey-dark-1.u-table-cell
+                  button.btn(type='button' data-toggle='modal' data-target='#rolepopup')
+                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
                   a(href='#')
-                    i.fa-solid.icon-white.fa-caret-right.fa-2xl
-            tbody
-              tr
-                td.tg-vr4i Time
-                td.tg-vr4i 12 am
-                td.tg-vr4i 1 am
-                td.tg-vr4i 2 am
-                td.tg-vr4i 3 am
-                td.tg-vr4i 4 am
-                td.tg-vr4i 5 am
-                td.tg-vr4i 6 am
-                td.tg-vr4i 7 am
-                td.tg-vr4i 8 am
-                td.tg-vr4i 9 am
-                td.tg-vr4i 10 am
-                td.tg-vr4i 11 am
-                td.tg-vr4i 12 pm
-                td.tg-vr4i 1 pm
-                td.tg-vr4i 2 pm
-                td.tg-vr4i 3 pm
-                td.tg-vr4i 4 pm
-                td.tg-vr4i 5 pm
-                td.tg-vr4i 6 pm
-                td.tg-vr4i 7 pm
-                td.tg-vr4i 8 pm
-                td.tg-vr4i 9 pm
-                td.tg-vr4i 10 pm
-                td.tg-vr4i 11 pm
-            each val, key in {0:"Monday",1:"Tuesday",2:"Wednesday",3:"Thursday",4:"Friday",5:"Saturday",6:"Sunday"}
-              tr
-                td.tg-vr4i(rowspan='1')= val 
-                - for(x = 0; x < 24; x++)
-                  td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"])= info[key][x]["WorkerName"]
-                    form(action="/PlaceWorker" method="POST" style={height: "100%", width: "100%"})
-                      input(type="hidden" value= info[key][x]["HourId"] name="Hour_Id")
-                      input(type="hidden" value= user["userId"] name="User_Id")
-                      div(onclick="this.parentNode.submit()" style={height: "25px", width: "25px", cursor: "pointer"})
-      p  
-      p 
+                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
+              tr(style='height: 12px;')
+                td.u-border-1.u-border-grey-dark-1.u-table-cell
+                  | Student User
+                  br
+                td.u-border-1.u-border-grey-dark-1.u-table-cell 12
+                td.u-border-1.u-border-grey-dark-1.u-table-cell
+                  button.btn(type='button' data-toggle='modal' data-target='#rolepopup')
+                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
+                  a(href='#')
+                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
+    // Modal
+    #rolepopup.modal.fade(tabindex='-1' role='dialog' aria-labelledby='rolepopuplabel' aria-hidden='true')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-header
+            button.close(type='button' data-dismiss='modal' aria-label='Close')
+              span(aria-hidden='true') ×
+          .modal-body.text-center
+            iframe(src='Role-Popup' title='editrole' width='400' height='350')
+          .modal-footer
+            button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+            button.btn.btn-primary(type='button') Save changes
     footer.custom-footer
       .text-center.p-3

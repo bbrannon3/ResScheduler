@@ -14,12 +14,6 @@ html(style='font-size: 16px;')
     script(src='https://kit.fontawesome.com/827e17ac31.js')
     meta(content='Nicepage 4.6.5, nicepage.com' name='generator')
     link#u-theme-google-font(href='https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i' rel='stylesheet')
-    script(type='application/ld+json').
-      {
-      "@context": "http://schema.org",
-      "@type": "Organization",
-      "name": ""
-      }
     meta(content='#478ac9' name='theme-color')
     meta(content='Home' property='og:title')
     meta(content='website' property='og:type')
@@ -45,15 +39,20 @@ html(style='font-size: 16px;')
               li.u-nav-item
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Trade-Shift' style='padding: 10px 20px;') Trade Shifts
               li.u-nav-item
-                a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Login' style='padding: 10px 20px;') Login
-              li.u-nav-item
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
                 .u-nav-popup
                   ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
                     li.u-nav-item
                       a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
                     li.u-nav-item
+                      a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
+                    li.u-nav-item
                       a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
+              li.u-nav-item
+                if !User['Authenticated']
+                  a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Login' style='padding: 10px 20px;') Login
+                else
+                  a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Logout' style='padding: 10px 20px;') Logout
           .u-custom-menu.u-nav-container-collapse
             .u-black.u-container-style.u-inner-container-layout.u-opacity.u-opacity-95.u-sidenav
               .u-inner-container-layout.u-sidenav-overflow
@@ -66,7 +65,20 @@ html(style='font-size: 16px;')
                   li.u-nav-item
                     a.u-button-style.u-nav-link(href='Trade-Shift') Trade Shifts
                   li.u-nav-item
-                    a.u-button-style.u-nav-link(href='Login') Login
+                    if !User.Authenticated
+                      a.u-button-style.u-nav-link(href='Login') Login
+                    else
+                      a.u-button-style.u-nav-link(href='Logout') Logout
+                  li.u-nav-item
+                    a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
+                    .u-nav-popup
+                      ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
+                        li.u-nav-item
+                          a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
+                        li.u-nav-item
+                          a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
+                        li.u-nav-item
+                          a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
             .u-black.u-menu-overlay.u-opacity.u-opacity-70
           style.offcanvas-style.
             .u-offcanvas .u-sidenav { flex-basis: 250px !important; }            .u-offcanvas:not(.u-menu-open-right) .u-sidenav { margin-left: -250px; }            .u-offcanvas.u-menu-open-right .u-sidenav { margin-right: -250px; }            @keyframes menu-shift-left    { from { left: 0;        } to { left: 250px;  } }            @keyframes menu-unshift-left  { from { left: 250px;  } to { left: 0;        } }            @keyframes menu-shift-right   { from { right: 0;       } to { right: 250px; } }            @keyframes menu-unshift-right { from { right: 250px; } to { right: 0;       } }
@@ -84,8 +96,8 @@ html(style='font-size: 16px;')
                 .u-container-style.u-custom-color-3.u-expanded-width.u-group.u-shape-rectangle.u-group-1
                   .u-container-layout.u-valign-top.u-container-layout-2
                     h4.u-align-center.u-text.u-text-1 Preferences
-                p.u-align-center.u-custom-font.u-heading-font.u-text.u-text-2 A schedule made just for you! Customize your schedule today.
-                a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-1(href='#') Customize Now
+                p.u-align-center.u-custom-font.u-heading-font.u-text.u-text-2 Adjust your account preferences by clicking the button below.
+                a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-1(href='#') Preferences
                 p  
             .u-align-center.u-container-style.u-custom-color-2.u-list-item.u-repeater-item.u-shape-rectangle.u-list-item-2
               .u-container-layout.u-similar-container.u-valign-top.u-container-layout-3
@@ -102,7 +114,7 @@ html(style='font-size: 16px;')
                 .u-container-style.u-custom-color-3.u-expanded-width.u-group.u-shape-rectangle.u-group-3
                   .u-container-layout.u-valign-top.u-container-layout-6
                     h4.u-align-center.u-text.u-text-5 Trade Shifts
-                p.u-align-center.u-custom-font.u-heading-font.u-text.u-text-6 Trading shifts with your coworkers is as easy as a press of a button...
-                a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-3(href='#') Trade Shifts
+                p.u-align-center.u-custom-font.u-heading-font.u-text.u-text-6 Easily trade shifts by simply selecting a shift and requesting a trade.
+                a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-3(href='Full-Schedule') View Shifts
     footer.custom-footer
       .text-center.p-3

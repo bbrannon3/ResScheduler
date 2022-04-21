@@ -932,10 +932,16 @@ app.get('/', isConnected, async(req, res, next) => {
     //console.log(ids)
     //createScheduleHour(44, 4, 1, 2)
     //console.log(req.user.username.toString())
-    var info = {"username" : "Log In"};
+    var info = {"Authenticated" : false};
+    console.log(req.user)
+    if(req.user){
+        info["Authenticated"] = true;
+    }
+
     date = getCurrentMonthandWeek();
     confirmation = await createMonthIfNotExist(date["month"], currentYear())
-    res.render('index')
+    console.log(info)
+    res.render('index',{"User":{"Authenticated":info["Authenticated"]}})
 });
 
 app.get('/index', (req, res, next) => {
@@ -1089,8 +1095,14 @@ app.get('/login-failure', isConnected,(req, res, next) => {
 
 
 app.get('/register', isConnected,(req, res, next) => {
-    console.log("Inside get");
-    res.render('register')
+    
+    var info = {"Authenticated" : false};
+    console.log(req.user)
+    if(req.user){
+        info["Authenticated"] = true;
+    }
+
+    res.render('register',{"User":{"Authenticated":info["Authenticated"]}})
     
 });
 
@@ -1162,7 +1174,13 @@ app.get('/admin-route',isAdmin,(req, res, next) => {
 
 app.get('/notAuthorized', (req, res, next) => {
     console.log("Inside get");
-    res.render("Access-Denied")
+    var info = {"Authenticated" : false};
+    console.log(req.user)
+    if(req.user){
+        info["Authenticated"] = true;
+    }
+
+    res.render("Access-Denied",{"User":{"Authenticated":info["Authenticated"]}})
     
 });
 app.get('/notAuthorizedAdmin', (req, res, next) => {
@@ -1188,6 +1206,15 @@ app.post('/Admin-Settings', (req, res, next) =>{
 app.get('/Notifications', isConnected, isAuth,(req,res,next)=>{
     res.render("Notifications")
 })
+
+app.get('/Role-Management', isConnected, isAuth, (req, res, next)=>{
+    res.render("Role-Management")
+})
+
+app.get('/Role-Popup', isConnected, isAuth, (req, res, next)=>{
+    res.render("Role-Popup")
+})
+
 
 
 //Start App
