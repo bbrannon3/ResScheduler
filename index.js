@@ -10,6 +10,7 @@ const mysql = require("mysql")
 var session = require('express-session');
 const { userInfo } = require('os');
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
+const { ifError } = require('assert');
 var MySQLStore = require('express-mysql-session')(session);
 
 const rawData = fs.readFileSync('./dataStores/databaseinfo.txt');
@@ -422,6 +423,41 @@ function createScheduleHour(hourId, workerId, shiftRole, woCount = 0){
     });
 }
 
+function createAvalability(hour, day, user_id){
+
+
+    connection.query('Delete from user_avalablility WHERE hour = ? AND day = ? AND user_id =?', [hour, day, user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else if(results.affectedRows == 0)
+        {
+            connection.query('Insert into user_avalablility(hour,day,user_id) values(?,?,?)', [hour, day, user_id], function(error, results, fields) {
+                if (error) 
+                    {
+                        console.log("Error Inserting");
+                        console.log(error)
+                    }
+                else
+                {
+                    
+            
+        
+                }
+                
+            });
+            
+
+        }
+        
+    });
+
+
+    
+}
+
 
 async function getUserInfoById(user_id){
     return new Promise(resolve =>{
@@ -526,6 +562,66 @@ async function getAllUserRoles(){
                 out[element["iduser_roles"]] = {     
                     "Name":element["role_name"]
                         }
+            });
+            resolve(out);        
+       }
+       else
+       {
+          
+           resolve([])
+       }
+    })
+  })
+}
+
+async function getAllShiftRoles(){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select ID, Name, Color from shift_roles', function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out[element["ID"]] = {     
+                    "Name":element["Name"],
+                    "Color":element["Color"],
+                    "Id": element["ID"]
+                        }
+            });
+            resolve(out);        
+       }
+       else
+       {
+          
+           resolve([])
+       }
+    })
+  })
+}
+
+async function getAvalabilityById(user_id){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select iduser_avalablility, day, hour, avalability from user_avalablility where user_id = ?',[user_id] ,function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            var i = 0;
+            results.forEach(element => {
+                out[i] = {
+                    "Ava_Id": element["iduser_avalablility"],
+                    "Day": element["day"],     
+                    "Hour":element["hour"],
+                    "Avalability":element["avalability"]
+                        }
+                i+=1;
             });
             resolve(out);        
        }
@@ -990,15 +1086,17 @@ app.get('/New-Password', isConnected,(req, res, next) => {
 
 });
 
-app.get('/User-Settings', isConnected, isAuth, (req, res, next) => {
+app.get('/User-Settings', isConnected, isAuth, async(req, res, next) => {
     var userInfo = {
         "UserId": req.user.id,
         "FName": req.user.fname,
         "LName": req.user.lname,
         "Email": req.user.email,
         "Birthday": req.user.birthday,
-        "Phone": req.user.phone
+        "Phone": req.user.phone,
+        "Avalability" : await getAvalabilityById(req.user.id)
     }
+    console.log(userInfo["Avalability"])
     res.render('User-Settings', userInfo)
 
 });
@@ -1034,6 +1132,8 @@ app.get('/Full-Schedule',isConnected,isAuth, async(req, res, next) => {
         "userId" : req.user.id,
         "userName" : req.user.username
     }
+    fullInfo["Users"] = await getAllUsersWithRole();
+    fullInfo["Roles"] = await getAllShiftRoles();
     console.log("Sched: " + currDate["week"])
     fullInfo["info"] = await compileWeekSchedulingObjAllUsers(await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
     //console.log(fullInfo["info"])
@@ -1154,9 +1254,17 @@ app.post('/register', userExists,(req,res,next)=>{
 });
 
 app.post('/PlaceWorker', (req, res, next)=>{
-    createScheduleHour(req.body["Hour_Id"], req.body["User_Id"], 1, 1)
+    console.log(req.body)
+    createScheduleHour(req.body["Hour_Id"], req.body["selectname"], req.body["selectrole"], req.body['workordercount'])
    //res.sendStatus("200")
     res.redirect("/Full-Schedule")
+})
+
+app.post('/PlaceAvalability', (req, res, next)=>{
+    console.log(req.body)
+    createAvalability(req.body["Hour"], req.body["Day"], req.body["UserId"])
+   
+    res.redirect('/User-Settings')
 })
 
 app.post('/login',passport.authenticate('local',{failureRedirect:'/login-failure',successRedirect:'/'}));
@@ -1207,14 +1315,62 @@ app.get('/Notifications', isConnected, isAuth,(req,res,next)=>{
     res.render("Notifications")
 })
 
-app.get('/Role-Management', isConnected, isAuth, (req, res, next)=>{
-    res.render("Role-Management")
+app.get('/Role-Management', isConnected, isAuth, async(req, res, next)=>{
+    var roles = await getAllShiftRoles();
+    res.render("Role-Management", {"Roles":roles})
 })
+
+app.post('/Role-Management', async(req, res, next)=>{
+    console.log(req.body)
+    if(req.body["role-id"] != -1){
+    connection.query('UPDATE `shift_roles` SET name=?, color=? WHERE id=? ', [req.body.name, req.body.color_picker.substring(1), req.body['role-id']], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+ } else {
+    connection.query('Insert into `shift_roles` SET name=?, color=? ', [req.body.name, req.body.color_picker.substring(1)], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+ }
+})
+
 
 app.get('/Role-Popup', isConnected, isAuth, (req, res, next)=>{
     res.render("Role-Popup")
 })
 
+app.get('/Trade-Shift-Approval', isConnected, isAuth, (req, res, next)=>{
+    res.render("Trade-Shift-Approval")
+})
+
+app.get('/Request-Off-Approval', isConnected, isAuth, (req, res, next)=>{
+    res.render("Request-Off-Approval")
+})
+
+app.get('/Cover-shift-Approval', isConnected, isAuth, (req, res, next)=>{
+    res.render("Cover-shift-Approval")
+})
+
+app.get('/Pop-Up', isConnected, isAuth, (req, res, next)=>{
+    res.render("Pop-Up")
+})
 
 
 //Start App

@@ -37,8 +37,6 @@ html(style='font-size: 16px;')
               li.u-nav-item
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='My-Schedule' style='padding: 10px 20px;') Schedule Viewer
               li.u-nav-item
-                a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Trade-Shift' style='padding: 10px 20px;') Trade Shifts
-              li.u-nav-item
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
                 .u-nav-popup
                   ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
@@ -46,6 +44,12 @@ html(style='font-size: 16px;')
                       a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
                     li.u-nav-item
                       a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
+                    li.u-nav-item
+                      a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
+                    li.u-nav-item
+                      a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
+                    li.u-nav-item
+                      a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
                     li.u-nav-item
                       a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
               li.u-nav-item
@@ -63,8 +67,6 @@ html(style='font-size: 16px;')
                   li.u-nav-item
                     a.u-button-style.u-nav-link(href='My-Schedule') Schedule Viewer
                   li.u-nav-item
-                    a.u-button-style.u-nav-link(href='Trade-Shift') Trade Shifts
-                  li.u-nav-item
                     if !User['Authenticated']
                       a.u-button-style.u-nav-link(href='Login') Login
                     else 
@@ -77,6 +79,12 @@ html(style='font-size: 16px;')
                           a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
                         li.u-nav-item
                           a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
+                        li.u-nav-item
+                          a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
+                        li.u-nav-item
+                          a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
+                        li.u-nav-item
+                          a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
                         li.u-nav-item
                           a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
             .u-black.u-menu-overlay.u-opacity.u-opacity-70

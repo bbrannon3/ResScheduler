@@ -18,44 +18,36 @@ html(style='font-size: 16px;')
     meta(content='' property='og:description')
     meta(content='website' property='og:type')
   body.u-body.u-xl-mode
-    section#sec-cf91.u-align-center.u-clearfix.u-custom-color-5.u-section-2
-      .u-align-left.u-clearfix.u-sheet.u-sheet-1
+    section#sec-cf91.u-align-center.u-clearfix.u-custom-color-5.u-section-2(class='pop-up-hidden')
+      .u-align-left.u-clearfix.u-sheet.u-sheet-1.u-align-center
         .u-clearfix.u-custom-html.u-expanded-width.u-custom-html-1
           .rendered-form
             div
-              h1#control-7621841
-                | 12:00PM, Wednesday
+              h1#control-7621841(class="Time")
                 br
             .field-selectname.form-group.formbuilder-select
               label.formbuilder-select-label(for='selectname') Name
-              select#selectname(name='selectname')
-                option#selectname-0(selected='true')
-                  | Brody
-                option#selectname-1(selected='true')
-                  | Parker
-                option#selectname-2(selected='true')
-                  | Tyler
-                option#selectname-3(selected='true')
-                  | David
-                option#selectname-4(selected='true')
-                  | Noah
+              select#selectname(name='selectname' class="Shift-Data")
+                for user in Users
+                  option#selectname-0(selected='true' value= user["id"])= user["UserName"]
+                    
             .field-selectrole.form-group.formbuilder-select
               label.formbuilder-select-label(for='selectrole') Role
-              select#selectrole(name='selectrole')
-                option#selectrole-0(selected='true')
-                  | Floater
-                option#selectrole-1(selected='true')
-                  | Maintenance
+              select#selectrole(name='selectrole' class="Shift-Data")
+                for role in Roles
+                  option#selectrole-0(selected='true' value= role["Id"])= role["Name"]
+                  
             .field-workordercount.form-group.formbuilder-text
               label.formbuilder-text-label(for='workordercount')
                 | Work Order Count
                 br
-              input#workordercount(name='workordercount' type='text')
+              input#workordercount(name='workordercount' type='text' class="Shift-Data")
+              input(name='Hour_Id' type='hidden' id="hours_shift" class="Shift-Data")
+
             .field-button-1650394388973.form-group.formbuilder-button
-              button#button-1650394388973.btn.btn-danger(name='button-1650394388973' type='button')
+              button#button-1650394388973.btn.btn-danger(name='button-1650394388973' type='button' onclick='closePop()')
                 | Cancel
-                br
             .field-button-1650394408659.form-group.formbuilder-button
-              button#button-1650394408659.btn.btn-success(name='button-1650394408659' type='button')
+              button#button-1650394408659.btn.btn-success(name='button-1650394408659' type='button' onclick='submitShift()')
                 | Submit
                 br

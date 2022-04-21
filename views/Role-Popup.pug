@@ -17,17 +17,17 @@ html(style='font-size: 16px;')
     meta(content='Pop-Up' property='og:title')
     meta(content='' property='og:description')
     meta(content='website' property='og:type')
-  body.u-body.u-xl-mode
-    section#sec-cf91.u-align-center.u-clearfix.u-custom-color-5.u-section-2
+  body.u-body.u-xl-mode.u-align-center
+    section#sec-cf91.u-align-center.u-clearfix.u-custom-color-5.u-section-5(class='pop-up-hidden')
       .u-align-left.u-clearfix.u-sheet.u-sheet-1
-        .u-clearfix.u-custom-html.u-expanded-width.u-custom-html-1
+        .u-clearfix.u-custom-html.u-expanded-width.u-custom-html-1.u-align-center.u-valign-middle
           form
-            h1 Edit Administrator Role
+            h1 Edit Shift Role
             p
               label
-                | Attribute
-                input(type='text' name='attribute')
-            p
+                | Name
+                input(type='text' name='name' id='role-name')
+            //p
               label
                 | Attribute
                 select#attribute(name='attribute')
@@ -35,15 +35,16 @@ html(style='font-size: 16px;')
                   option(value='selection1') selection 1
                   option(value='selection2') selection 2
                   option(value='selection2') selection 3
-            p
-              label
-                | Attribute
-                input(type='text' name='attribute')
-            p
+            //p
               label
                 | Date Picker
                 input(type='date' name='date_picker')
             p
               label
                 | Color Picker
-                input(type='color' name='color_picker')
+                input(type='color' name='color_picker' id='role-color')
+                input(type='hidden' name='role-id' id='role-id' value=-1)
+
+            p.u-align.center
+              a.u-border-none.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-1(href='#' onclick="submitShiftRole()") Update
+

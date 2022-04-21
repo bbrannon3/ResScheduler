@@ -11,6 +11,7 @@ html(style='font-size: 16px;')
     link(href='css/User-Management.css' media='screen' rel='stylesheet')
     script.u-script(defer='' src='js/jquery.js' type='text/javascript')
     script.u-script(defer='' src='js/nicepage.js' type='text/javascript')
+    script.u-script(defer='' src='js/modalIntercept.js' type='text/javascript')
     script(src='https://kit.fontawesome.com/827e17ac31.js' crossorigin='anonymous')
     meta(content='Nicepage 4.6.5, nicepage.com' name='generator')
     link#u-theme-google-font(href='https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i' rel='stylesheet')
@@ -43,8 +44,6 @@ html(style='font-size: 16px;')
               li.u-nav-item
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='My-Schedule' style='padding: 10px 20px;') Schedule Viewer
               li.u-nav-item
-                a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Trade-Shift' style='padding: 10px 20px;') Trade Shifts
-              li.u-nav-item
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
                 .u-nav-popup
                   ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
@@ -52,6 +51,12 @@ html(style='font-size: 16px;')
                       a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
                     li.u-nav-item
                       a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
+                    li.u-nav-item
+                      a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
+                    li.u-nav-item
+                      a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
+                    li.u-nav-item
+                      a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
                     li.u-nav-item
                       a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
               li.u-nav-item
@@ -66,8 +71,6 @@ html(style='font-size: 16px;')
                   li.u-nav-item
                     a.u-button-style.u-nav-link(href='My-Schedule') Schedule Viewer
                   li.u-nav-item
-                    a.u-button-style.u-nav-link(href='Trade-Shift') Trade Shifts
-                  li.u-nav-item
                     a.u-button-style.u-nav-link(href='Login') Login
                   li.u-nav-item
                     a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
@@ -77,6 +80,12 @@ html(style='font-size: 16px;')
                           a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
                         li.u-nav-item
                           a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
+                        li.u-nav-item
+                          a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
+                        li.u-nav-item
+                          a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
+                        li.u-nav-item
+                          a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
                         li.u-nav-item
                           a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
             .u-black.u-menu-overlay.u-opacity.u-opacity-70
@@ -90,7 +99,9 @@ html(style='font-size: 16px;')
     section#sec-f365.u-clearfix.u-custom-color-5.u-section-1
       .u-clearfix.u-sheet.u-valign-middle.u-sheet-1
         h1.u-custom-font.u-text.u-text-custom-color-3.u-text-default.u-text-1 Manage Roles
-        p.u-custom-font.u-text.u-text-custom-color-3.u-text-default.u-text-2 Create and modify permission roles.
+        p.u-custom-font.u-text.u-text-custom-color-3.u-text-default.u-text-2 Create and modify shift roles.
+        a.u-border-none.u-btn.u-btn-round.u-button-style.u-custom-color-3.u-hover-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-1(href='#' onclick='modalFind(\''+'\',\'#'+'ffffff'+'\', \''+'-1'+'\')') Create New
+
     section#sec-cf91.u-align-center.u-clearfix.u-custom-color-5.u-section-2
       .u-align-left.u-clearfix.u-sheet.u-sheet-1
         .u-align-center.u-table.u-table-responsive.u-table-1
@@ -102,50 +113,22 @@ html(style='font-size: 16px;')
             thead.u-align-center.u-custom-color-3.u-custom-font.u-table-header.u-table-header-1
               tr(style='height: 12px;')
                 th.u-border-1.u-border-grey-dark-1.u-table-cell Role
-                th.u-border-1.u-border-grey-dark-1.u-table-cell Users Assigned
+                th.u-border-1.u-border-grey-dark-1.u-table-cell Color
                 th.u-border-1.u-border-grey-dark-1.u-table-cell Actions
             tbody.u-align-center.u-custom-font.u-table-body.u-text-custom-color-3.u-white.u-table-body-1
-              tr(style='height: 12px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  | Administrator
-                  br
-                td.u-border-1.u-border-grey-dark-1.u-table-cell 1
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  button.btn(type='button' data-toggle='modal' data-target='#rolepopup')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
-              tr(style='height: 12px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  | Manager
-                  br
-                td.u-border-1.u-border-grey-dark-1.u-table-cell 3
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  button.btn(type='button' data-toggle='modal' data-target='#rolepopup')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
-              tr(style='height: 12px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  | Student User
-                  br
-                td.u-border-1.u-border-grey-dark-1.u-table-cell 12
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  button.btn(type='button' data-toggle='modal' data-target='#rolepopup')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
-                  a(href='#')
-                    i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
-    // Modal
-    #rolepopup.modal.fade(tabindex='-1' role='dialog' aria-labelledby='rolepopuplabel' aria-hidden='true')
-      .modal-dialog(role='document')
-        .modal-content
-          .modal-header
-            button.close(type='button' data-dismiss='modal' aria-label='Close')
-              span(aria-hidden='true') ×
-          .modal-body.text-center
-            iframe(src='Role-Popup' title='editrole' width='400' height='350')
-          .modal-footer
-            button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-            button.btn.btn-primary(type='button') Save changes
+              for role in Roles
+                tr(style='height: 12px;')
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell= role["Name"]
+                    br
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell(style={background: "#"+role["Color"]})
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell
+                    button.btn(type='button' data-toggle='modal' data-target='#rolepopup' onclick='modalFind(\''+role['Name']+'\',\'#'+role["Color"]+'\', \''+role["Id"]+'\')')
+                      i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
+                    a(href='#')
+                      i.fa-regular.fa-lg.icon-primary-color.fa-trash-can
+
+            
+              .u-align-center
+                include Role-Popup.pug
     footer.custom-footer
       .text-center.p-3
