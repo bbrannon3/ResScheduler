@@ -4,12 +4,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Trade Shift</title>
-    <link rel="stylesheet" href="css/nicepage.css" media="screen">
     <link rel="stylesheet" href="css/Trade-Shift.css" media="screen">
+    <link rel="stylesheet" href="css/nicepage.css" media="screen">
     <script class="u-script" type="text/javascript" src="js/jquery.js" defer=""></script>
     <script class="u-script" type="text/javascript" src="js/nicepage.js" defer=""></script>
     <script src="https://kit.fontawesome.com/827e17ac31.js" crossorigin="anonymous"></script>
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <meta name="theme-color" content="#478ac9">
     <meta property="og:title" content="Trade Shift">
     <meta property="og:description" content="">
@@ -37,9 +41,6 @@
                 <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="My-Schedule.html" style="padding: 10px 20px;">Schedule Viewer</a>
               </li>
               <li class="u-nav-item">
-                <a class="u-button-style u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="Trade-Shift.html" style="padding: 10px 20px;">Trade Shifts</a>
-              </li>
-              <li class="u-nav-item">
                 <a class="u-button-style u-nav-link u-text-active-palette-1-base" href="#" style="padding: 10px 20px;">Admin Pages</a>
                 <div class="u-nav-popup">
                   <ul class="u-h-spacing-20 u-nav u-unstyled u-v-spacing-10">
@@ -48,6 +49,15 @@
                     </li>
                     <li class="u-nav-item">
                       <a class="u-button-style u-nav-link u-white active" href="Role-Management.html">Role Management</a>
+                    </li>
+                    <li class="u-nav-item">
+                      <a class="u-button-style u-nav-link u-white active" href="Trade-Shift-Approval.html">Trade Shift Approval</a>
+                    </li>
+                    <li class="u-nav-item">
+                      <a class="u-button-style u-nav-link u-white active" href="Request-Off-Approval.html">Request Off Approval</a>
+                    </li>
+                    <li class="u-nav-item">
+                      <a class="u-button-style u-nav-link u-white active" href="Cover-shift-Approval.html">Cover Shift Approval</a>
                     </li>
                     <li class="u-nav-item">
                       <a class="u-button-style u-nav-link u-white active" href="Admin-Settings.html">Application Settings</a>
@@ -72,9 +82,6 @@
                     <a class="u-button-style u-nav-link" href="My-Schedule.html">Schedule Viewer</a>
                   </li>
                   <li class="u-nav-item">
-                    <a class="u-button-style u-nav-link" href="Trade-Shift.html">Trade Shifts</a>
-                  </li>
-                  <li class="u-nav-item">
                     <a class="u-button-style u-nav-link" href="Login.html">Login</a>
                   </li>
                   <li class="u-nav-item">
@@ -86,6 +93,15 @@
                         </li>
                         <li class="u-nav-item">
                           <a class="u-button-style u-nav-link u-white active" href="Role-Management.html">Role Management</a>
+                        </li>
+                        <li class="u-nav-item">
+                          <a class="u-button-style u-nav-link u-white active" href="Trade-Shift-Approval.html">Trade Shift Approval</a>
+                        </li>
+                        <li class="u-nav-item">
+                          <a class="u-button-style u-nav-link u-white active" href="Request-Off-Approval.html">Request Off Approval</a>
+                        </li>
+                        <li class="u-nav-item">
+                          <a class="u-button-style u-nav-link u-white active" href="Cover-shift-Approval.html">Cover Shift Approval</a>
                         </li>
                         <li class="u-nav-item">
                           <a class="u-button-style u-nav-link u-white active" href="Admin-Settings.html">Application Settings</a>
@@ -118,14 +134,76 @@
                 <h3 class="u-text u-text-default u-text-3">Role: Floater</h3>
               </div>
             </div>
-            <a href="" class="u-border-none u-btn u-btn-round u-button-style u-color-scheme-summer-time u-color-style-multicolor-1 u-custom-color-3 u-radius-50 u-text-custom-color-4 u-btn-1">Request Shift Trade</a>
-            <a href="" class="u-border-none u-btn u-btn-round u-button-style u-color-scheme-summer-time u-color-style-multicolor-1 u-custom-color-3 u-radius-50 u-text-custom-color-4 u-btn-2">Request Time Off</a>
+            <button type="button" class="" data-toggle="modal" data-target="#giveupshift"><p class="text-center"><p class="u-border-none u-btn u-btn-round u-button-style u-color-scheme-summer-time u-color-style-multicolor-1 u-custom-color-3 u-radius-50 u-text-custom-color-4 u-btn-2 customButton" style="color: #efd75f !important;">Request Shift Trade</p></button>
+            <button type="button" class="" data-toggle="modal" data-target="#timeoffreason"><p class="text-center"><p class="u-border-none u-btn u-btn-round u-button-style u-color-scheme-summer-time u-color-style-multicolor-1 u-custom-color-3 u-radius-50 u-text-custom-color-4 u-btn-2 customButton" style="color: #efd75f !important;">Request Time Off</p></button>
             <a href="" class="u-border-none u-btn u-btn-round u-button-style u-color-scheme-summer-time u-color-style-multicolor-1 u-custom-color-3 u-radius-50 u-text-custom-color-4 u-btn-3">Cover Shift</a>
             <p>&nbsp;</p>
           </div>
         </div>
       </div>
-    </section>   
+    </section>
+   
+<!-- Trade Shift Modal -->
+<div class="modal fade" id="giveupshift" tabindex="-1" role="dialog" aria-labelledby="giveupshift" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+          <p>Select which of your shifts you would like to trade for.</p>
+          <form>
+            <p>
+              <label>Attribute
+              <select id="attribute" name="attribute">
+              <option value="" selected="selected">Select One</option>
+              <option value="selection1" >selection 1</option>
+              <option value="selection2" >selection 2</option>
+              <option value="selection2" >selection 3</option>
+              </select>
+              </label> 
+            </p>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Trade Shift Modal-->
+
+<!-- Time Off Reason Modal -->
+<div class="modal fade" id="timeoffreason" tabindex="-1" role="dialog" aria-labelledby="timeoffreason" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+          <p>What is the reason for your time off request?</p>
+          <form>
+            <p>
+              <label>
+              <input type="text" name="attribute">
+              </label> 
+            </p>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Time Off Reason Modal -->
+
     <footer class="custom-footer">
       <div class="text-center p-3"></div>
     </footer>
