@@ -1,6 +1,7 @@
 const SHIFT_ROLE = '/Role-Management'
 const SHIFT_POST = '/PlaceWorker'
 const ROLE_DELETE = '/Delete-Role'
+const SHIFT_DELETE = '/DeleteShift'
 
 function modalFind(name, color,id){
     form = document.getElementsByClassName("pop-up-hidden").item(0)
@@ -30,8 +31,9 @@ function submitShiftRole(){
 
     }
 
-function transferShiftData(hour, hour_place, day){
+function transferShiftData(hour, hour_place, day, shift){
     document.getElementById('hours_shift').value = hour;
+    document.getElementById('Shift_Id').value = shift;
     var time = ""
     switch(hour_place){
         case("0"):
@@ -132,6 +134,44 @@ function submitShift(){
     })
 
 }
+
+function deleteShift(){
+    var inputs = document.getElementsByClassName('Shift-Data');
+    var out = {};
+    for(i=0; i < inputs.length; i++){
+        out[inputs[i].name] = inputs[i].value;
+    }
+    fetch(SHIFT_DELETE,{
+        method : 'POST',
+        body : JSON.stringify(out),
+        headers : {
+            'content-type' : 'application/json'
+        }
+    }).then((response)=>{
+        location.reload()
+    })
+
+}
+
+function postInPlace(URL, parent){
+    
+    var inputs = parent.getElementsByTagName('input');
+    var out = {};
+    for(i=0; i < inputs.length; i++){
+        out[inputs[i].name] = inputs[i].value;
+    }
+    fetch(URL,{
+        method : 'POST',
+        body : JSON.stringify(out),
+        headers : {
+            'content-type' : 'application/json'
+        }
+    }).then((response)=>{
+        location.reload()
+    })
+
+}
+
 
 function closePop(){
     form = document.getElementsByClassName("pop-up-visable").item(0)

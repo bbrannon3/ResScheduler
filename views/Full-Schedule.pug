@@ -159,7 +159,7 @@ html(style='font-size: 16px;')
               tr
                 td.tg-vr4i(rowspan='1')= val 
                 - for(x = 0; x < 24; x++)
-                  td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="transferShiftData(\'"+ info[key][x]["HourId"] +"\', \'"+x+"\', \'"+val+"\')")= info[key][x]["WorkerName"]
+                  td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="transferShiftData(\'"+ info[key][x]["HourId"] +"\', \'"+x+"\', \'"+val+"\', \'"+info[key][x]["Shift_Id"]+"\')")= info[key][x]["WorkerName"]
                      //button.btn(type='button' data-toggle='modal' data-target='#shiftpopup')
                       form(action="/PlaceWorker" method="POST" style={height: "100%", width: "100%"})
                       input(type="hidden" value= info[key][x]["HourId"] name="Hour_Id")

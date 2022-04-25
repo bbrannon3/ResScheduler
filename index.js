@@ -227,6 +227,22 @@ function deleteUserById(user_id){
     });
 }
 
+function deleteShiftById(shift_id){
+
+    connection.query('Delete from shift_info where id=? ', [shift_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
+}
+
 function deleteRoleById(role_id){
 
     connection.query('Delete from shift_info where Shift_Role=? ', [role_id], function(error, results, fields) {
@@ -418,7 +434,8 @@ async function getScheduledHoursForUserByHour(user_id, hourId){
                 out = { 
                                         "WO_Count" : element["WO_Count"], 
                                         "Shift_Role" : element["Shift_Role"],
-                                        "WorkerName" : element["Worker_ID"]
+                                        "WorkerName" : element["Worker_ID"],
+                                        "Shift_Id" : element["id"]
                                     }
             });
             resolve(out);        
@@ -513,7 +530,7 @@ async function getUserInfoById(user_id){
        }
        else
        {
-           console.log("No Hours found")
+           //console.log("No Hours found")
            resolve([])
        }
     })
@@ -739,7 +756,8 @@ async function getScheduledHoursbyHour(Hour_Id){
                     out = { 
                                             "WO_Count" : element["WO_Count"], 
                                             "Shift_Role" : element["Shift_Role"],
-                                            "WorkerName" : element["Worker_ID"]
+                                            "WorkerName" : element["Worker_ID"],
+                                            "Shift_Id" : element["id"]
                                         }
                 });
                 resolve(out);        
@@ -776,8 +794,8 @@ async function compileWeekSchedulingObj(Worker_ID, Month_Id, WeekPlacement){
             "WO_Count": temp["WO_Count"]  || "",
             "ShiftRoleName": shiftRoleInfo["ShiftName"] || "",
             "ShiftRoleColor": shiftRoleInfo["Color"] || "",
-            "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || ""
-
+            "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || "",
+            "Shift_Id" : temp["Shift_Id"]
             }
         }
         ByHours[i] = hours; 
@@ -805,7 +823,8 @@ for(i=0; i<7; i++){
         "WO_Count": temp["WO_Count"]  || "",
         "ShiftRoleName": shiftRoleInfo["ShiftName"] || "",
         "ShiftRoleColor": shiftRoleInfo["Color"] || "",
-        "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || ""
+        "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || "",
+        "Shift_Id" : temp["Shift_Id"]
 
         }
     }
@@ -1303,15 +1322,19 @@ app.post('/register', userExists,(req,res,next)=>{
 app.post('/PlaceWorker', (req, res, next)=>{
     console.log(req.body)
     createScheduleHour(req.body["Hour_Id"], req.body["selectname"], req.body["selectrole"], req.body['workordercount'])
-   //res.sendStatus("200")
-    res.redirect("/Full-Schedule")
+    res.sendStatus("200")
+})
+
+app.post('/DeleteShift', (req, res, next)=>{
+    console.log(req.body)
+    deleteShiftById(req.body["Shift_Id"])
+    res.sendStatus("200")
 })
 
 app.post('/PlaceAvalability', (req, res, next)=>{
     console.log(req.body)
     createAvalability(req.body["Hour"], req.body["Day"], req.body["UserId"])
-   
-    res.redirect('/User-Settings')
+    res.sendStatus(200)
 })
 
 app.post('/login',passport.authenticate('local',{failureRedirect:'/login-failure',successRedirect:'/'}));

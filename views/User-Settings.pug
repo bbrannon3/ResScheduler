@@ -11,6 +11,7 @@ html(style='font-size: 16px;')
     link(rel='stylesheet' href='css/User-Settings.css' media='screen')
     script.u-script(type='text/javascript' src='js/jquery.js' defer='')
     script.u-script(type='text/javascript' src='js/nicepage.js' defer='')
+    script.u-script(type='text/javascript' src='js/modalIntercept.js' defer='')
     link#u-theme-google-font(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i')
     link#u-page-google-font(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i')
     meta(name='theme-color' content='#478ac9')
@@ -193,11 +194,11 @@ html(style='font-size: 16px;')
                                    - notAva= false  
                       
                             td.tg-0lax.blackText(style=notAva?{background: "#FFFFFF"}:{background: "#FF0000"})
-                              form(action="/PlaceAvalability" method="POST" style={height: "100%", width: "100%"})
+                              form(style={height: "100%", width: "100%"})
                                 input(type="hidden" value= x name="Hour")
                                 input(type="hidden" value= key name="Day")
                                 input(type='hidden' name='UserId' value= UserId)
-                                div(onclick="this.parentNode.submit()" style={height: "25px", width: "25px", cursor: "pointer"})
+                                div(onclick="postInPlace('/PlaceAvalability', this.parentNode)" style={height: "25px", width: "25px", cursor: "pointer"})
                             // End Schedule Table
                     p  
                     p  

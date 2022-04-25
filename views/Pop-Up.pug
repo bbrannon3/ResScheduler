@@ -43,10 +43,15 @@ html(style='font-size: 16px;')
                 br
               input#workordercount(name='workordercount' type='text' class="Shift-Data")
               input(name='Hour_Id' type='hidden' id="hours_shift" class="Shift-Data")
+              input(name='Shift_Id' type='hidden' id="Shift_Id" class="Shift-Data")
 
             .field-button-1650394388973.form-group.formbuilder-button
               button#button-1650394388973.btn.btn-danger(name='button-1650394388973' type='button' onclick='closePop()')
                 | Cancel
+            //if User.Admin == true
+            .field-button-1650394388973.form-group.formbuilder-button
+              button#button-1650394388973.btn.btn-danger(name='button-1650394388973' type='button' onclick='deleteShift()')
+                | Delete
             .field-button-1650394408659.form-group.formbuilder-button
               button#button-1650394408659.btn.btn-success(name='button-1650394408659' type='button' onclick='submitShift()')
                 | Submit
