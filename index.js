@@ -118,7 +118,7 @@ passport.serializeUser((user,done)=>{
 });
 
 passport.deserializeUser(function(userId,done){
-   console.log('deserializeUser '+ userId);
+   
    connection.query('SELECT * FROM users where id = ?',[userId], function(error, results) {
            done(null, results[0]);    
    });
@@ -202,6 +202,18 @@ function userExists(req,res,next)
 function deleteUserById(user_id){
 
     connection.query('Delete from shift_info where Worker_ID=? ', [user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
+    connection.query('Delete from user_avalablility where user_id=? ', [user_id], function(error, results, fields) {
         if (error) 
             {
                 console.log("Delete Error: ", error);
@@ -506,7 +518,7 @@ function createAvalability(hour, day, user_id){
 async function getUserInfoById(user_id){
     return new Promise(resolve =>{
     out = {};
-    connection.query('Select id, username, fname, lname, email, phone, birthday from users where id = ?', [user_id], function(error, results, fields){
+    connection.query('Select id, username, fname, lname, email, phone, birthday, isAdmin from users where id = ?', [user_id], function(error, results, fields){
         if (error) 
            {
                console.log(error);
@@ -522,7 +534,8 @@ async function getUserInfoById(user_id){
                                         "lname":element["lname"],
                                         "email":element["email"],
                                         "phone":element["phone"],
-                                        "birthday":element["birthday"]
+                                        "birthday":element["birthday"],
+                                        "role" : element["isAdmin"]
                         }
             });
             
@@ -833,6 +846,22 @@ for(i=0; i<7; i++){
 return(ByHours)
 }
 
+function setUserRole(user_id, role_id){
+    
+    connection.query('UPDATE `users` SET isAdmin=? WHERE id=? ', [role_id, user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+}
+
 
 function createMonth(month, year){
     connection.query('Insert into schedule_months(Month,Year) values(?,?)', [month,year], function(error, results, fields) {
@@ -1098,7 +1127,7 @@ app.get('/Trade-Shift',isConnected,isAuth, async(req, res, next) => {
 });
 
 app.post('/Trade-Shift',isConnected,isAuth, async(req, res, next) => {
-    console.log(req.body)
+    console.log("Trade-Shift",req.body)
     res.render('Trade-Shift')
 
 });
@@ -1127,9 +1156,19 @@ app.post('/User-Management', isAuth, async(req,res, next)=>{
             "Avalability" : await getAvalabilityById(user.id)
         }
         res.render('User-Settings', userInfo)
+    } else if(req.body.Action === "Toggle"){
+        var user = await getUserInfoById(req.body.userId)
+        
+        if(user.role === 1){
+            setUserRole(user.id, 0)
+        } else{
+            setUserRole(user.id, 1)
+        }
+        res.sendStatus(200)
+
     } else {
         deleteUserById(req.body.userId);
-        res.redirect('/User-Management')
+        res.sendStatus(200)
     }
     
 })
@@ -1156,7 +1195,7 @@ app.get('/User-Settings', isConnected, isAuth, async(req, res, next) => {
         "Phone": req.user.phone,
         "Avalability" : await getAvalabilityById(req.user.id)
     }
-    console.log(userInfo["Avalability"])
+   
     res.render('User-Settings', userInfo)
 
 });
@@ -1190,7 +1229,8 @@ app.get('/Full-Schedule',isConnected,isAuth, async(req, res, next) => {
     }
     fullInfo["user"] = {
         "userId" : req.user.id,
-        "userName" : req.user.username
+        "userName" : req.user.username,
+        "isAdmin" : req.user.isAdmin
     }
     fullInfo["Users"] = await getAllUsersWithRole();
     fullInfo["Roles"] = await getAllShiftRoles();
