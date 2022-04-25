@@ -1,0 +1,38 @@
+ .u-section-5 {
+  
+}
+.pop-up-hidden{
+  visibility: hidden;
+  background: lightgray;
+  height: 0;
+}
+.pop-up-visable{
+  visibility: visible;
+  background: lightgray;
+  height: auto;
+}
+.u-section-1 .u-sheet-1 {
+  min-height: 110px;
+}
+
+.u-section-1 .u-text-1 {
+  font-family: Poppins;
+  font-weight: 600;
+  margin: 18px 40px 40px 19px;
+} .u-section-2 {
+  background-image: none;
+}
+
+.u-section-2 .u-sheet-1 {
+  min-height: 350px;
+}
+
+.u-section-2 .u-custom-html-1 {
+  margin-bottom: 60px;
+}
+.u-btn-round{
+  padding: 10px!important;
+  height: fit-content!important;
+  width: fit-content!important;
+  max-width: none!important;
+}

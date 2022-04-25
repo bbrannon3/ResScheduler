@@ -2,67 +2,85 @@ var passport = require('passport');
 const express = require('express');
 const LocalStrategy = require('passport-local').Strategy;
 const crypto = require("crypto")
-const app = express()
+const app = express();
 const port = 3000;
+const fs = require("fs");
 const bodyParser = require('body-parser');
 const mysql = require("mysql")
 var session = require('express-session');
-const { waitForDebugger } = require('inspector');
-const { resolve } = require('path');
-const { type } = require('os');
+const { userInfo } = require('os');
+const { SSL_OP_EPHEMERAL_RSA } = require('constants');
+const { ifError } = require('assert');
 var MySQLStore = require('express-mysql-session')(session);
 
-
-
-
-
-
-app.use(session({
-    key: 'session_cookie_name',
-    secret: 'session_cookie_secret',
-    store: new MySQLStore({
-        host: 'localhost',
-        port:3306,
-        user:'root',
-        password:'Dogdog12',
-        database:'cookie_user'
-    }),
-    resave:false,
-    saveUninitialized: false,
-    cookie:{
-        maxAge:1000*60*60*24
-    }
-}));
-
-
-
-
+const rawData = fs.readFileSync('./dataStores/databaseinfo.txt');
+const databaseInfo = JSON.parse(rawData);
 
 
 
 //Middleware Setup
-app.use(passport.initialize());
-app.use(passport.session());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(express.static('public'))
 app.set('view engine', 'pug')
 
+
+
 var connection = mysql.createConnection({
-    host: "localhost",
-    port:3306,
-    user: "root",
-    password:'Dogdog12',
+    host: databaseInfo["Host"],
+    port: databaseInfo["Port"],
+    user: databaseInfo["User"],
+    password: databaseInfo["Password"],
     database: "user",
     multipleStatements: true
 });
+
 connection.connect((err)=>{
     if(!err){
         console.log("Connected");
     }else{
-        console.log(err);
+       // console.log("Connection Error: ",err);
+
     }
 });
+
+var helpedMiddleware = function(middleware){
+    out = function(req,res,next){
+        connection.ping(err =>{
+            if(err){
+            return next()
+        } else {
+            return middleware(req,res,next);
+        }
+      })
+    }   
+    return out;
+ }
+
+
+app.use(helpedMiddleware( session({
+                key: 'session_cookie_name',
+                secret: 'session_cookie_secret',
+                store: new MySQLStore({
+                    host: databaseInfo["Host"],
+                    port: databaseInfo["Port"],
+                    user: databaseInfo["User"],
+                    password: databaseInfo["Password"],
+                    database:'cookie_user'
+                }),
+                resave:false,
+                saveUninitialized: false,
+                cookie:{
+                    maxAge:1000*60*60*24
+                }
+            })))
+
+
+
+
+app.use(helpedMiddleware(passport.initialize()));
+app.use(helpedMiddleware(passport.session()));
 
 
 const customFields={
@@ -100,7 +118,7 @@ passport.serializeUser((user,done)=>{
 });
 
 passport.deserializeUser(function(userId,done){
-   console.log('deserializeUser'+ userId);
+   
    connection.query('SELECT * FROM users where id = ?',[userId], function(error, results) {
            done(null, results[0]);    
    });
@@ -126,6 +144,7 @@ function isAuth(req,res,next)
 {
    if(req.isAuthenticated())
    {
+       //console.log(req)
        next();
    }
    else
@@ -134,10 +153,24 @@ function isAuth(req,res,next)
    }
 }
 
+function isConnected (req, res, next){
+    connection.ping(err =>{
+        if(err){
+            res.render("Admin-Settings", databaseInfo)
+        } else {
+            next()
+        }
+    });
+
+}
+
+function redirect(path, req, res, next){
+    res.render(path);
+}
 
 function isAdmin(req,res,next)
 {
-   if(req.isAuthenticated() && req.user.isAdmin==1)
+   if(req.isAuthenticated() && req.user.isAdmin==0)
    {
        next();
    }
@@ -164,6 +197,89 @@ function userExists(req,res,next)
        }
       
    });
+}
+
+function deleteUserById(user_id){
+
+    connection.query('Delete from shift_info where Worker_ID=? ', [user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
+    connection.query('Delete from user_avalablility where user_id=? ', [user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
+
+    connection.query('Delete from users where id=? ', [user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+}
+
+function deleteShiftById(shift_id){
+
+    connection.query('Delete from shift_info where id=? ', [shift_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
+}
+
+function deleteRoleById(role_id){
+
+    connection.query('Delete from shift_info where Shift_Role=? ', [role_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
+    connection.query('Delete from shift_roles where ID=? ', [role_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
 }
 
 async function getScheduleWeeksIDsForMonth(month_id){
@@ -330,7 +446,8 @@ async function getScheduledHoursForUserByHour(user_id, hourId){
                 out = { 
                                         "WO_Count" : element["WO_Count"], 
                                         "Shift_Role" : element["Shift_Role"],
-                                        "WorkerName" : element["Worker_ID"]
+                                        "WorkerName" : element["Worker_ID"],
+                                        "Shift_Id" : element["id"]
                                     }
             });
             resolve(out);        
@@ -362,11 +479,46 @@ function createScheduleHour(hourId, workerId, shiftRole, woCount = 0){
     });
 }
 
+function createAvalability(hour, day, user_id){
+
+
+    connection.query('Delete from user_avalablility WHERE hour = ? AND day = ? AND user_id =?', [hour, day, user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else if(results.affectedRows == 0)
+        {
+            connection.query('Insert into user_avalablility(hour,day,user_id) values(?,?,?)', [hour, day, user_id], function(error, results, fields) {
+                if (error) 
+                    {
+                        console.log("Error Inserting");
+                        console.log(error)
+                    }
+                else
+                {
+                    
+            
+        
+                }
+                
+            });
+            
+
+        }
+        
+    });
+
+
+    
+}
+
 
 async function getUserInfoById(user_id){
     return new Promise(resolve =>{
     out = {};
-    connection.query('Select id, username from users where id = ?', [user_id], function(error, results, fields){
+    connection.query('Select id, username, fname, lname, email, phone, birthday, isAdmin from users where id = ?', [user_id], function(error, results, fields){
         if (error) 
            {
                console.log(error);
@@ -377,8 +529,190 @@ async function getUserInfoById(user_id){
             results.forEach(element => {
                 out = { 
                                         "id":element["id"],
-                                        "username":element["username"]
+                                        "username":element["username"],
+                                        "fname":element["fname"],
+                                        "lname":element["lname"],
+                                        "email":element["email"],
+                                        "phone":element["phone"],
+                                        "birthday":element["birthday"],
+                                        "role" : element["isAdmin"]
                         }
+            });
+            
+            resolve(out);        
+       }
+       else
+       {
+           //console.log("No Hours found")
+           resolve([])
+       }
+    })
+  })
+}
+
+async function getUserInfoByUserName(userName){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select id from users where username = ?', [userName], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out = element["id"]
+            });
+            resolve(out);        
+       }
+       else
+       {
+           //console.log("No Hours found")
+           resolve([])
+       }
+    })
+  })
+}
+
+
+async function getUserRoleInfoById(role_id){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select role_name from user_roles where iduser_roles = ?', [role_id], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out = { 
+                                        "Name":element["role_name"]
+                        }
+            });
+            resolve(out);        
+       }
+       else
+       {
+          
+           resolve([])
+       }
+    })
+  })
+}
+
+
+async function getAllUserRoles(){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select iduser_roles, role_name from user_roles ', function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out[element["iduser_roles"]] = {     
+                    "Name":element["role_name"]
+                        }
+            });
+            resolve(out);        
+       }
+       else
+       {
+          
+           resolve([])
+       }
+    })
+  })
+}
+
+async function getAllShiftRoles(){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select ID, Name, Color from shift_roles', function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out[element["ID"]] = {     
+                    "Name":element["Name"],
+                    "Color":element["Color"],
+                    "Id": element["ID"]
+                        }
+            });
+            resolve(out);        
+       }
+       else
+       {
+          
+           resolve([])
+       }
+    })
+  })
+}
+
+async function getAvalabilityById(user_id){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select iduser_avalablility, day, hour, avalability from user_avalablility where user_id = ?',[user_id] ,function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            var i = 0;
+            results.forEach(element => {
+                out[i] = {
+                    "Ava_Id": element["iduser_avalablility"],
+                    "Day": element["day"],     
+                    "Hour":element["hour"],
+                    "Avalability":element["avalability"]
+                        }
+                i+=1;
+            });
+            resolve(out);        
+       }
+       else
+       {
+          
+           resolve([])
+       }
+    })
+  })
+}
+
+async function getAllUsersWithRole(){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select id, username, phone, isAdmin, email from users',  async(error, results, fields)=>{
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            var i = 0;
+            results.forEach(element => {
+                //role = await getUserRoleInfoById(element["isAdmin"])["Name"]
+                out[i] = { 
+                          "id":element["id"],
+                          "UserName":element["username"],
+                          "Email": element["email"],
+                          "Phone": element["phone"],
+                          "Role": element["isAdmin"]
+                        }
+                i += 1;
+            
             });
             resolve(out);        
        }
@@ -420,6 +754,38 @@ async function getShiftRoleInfoById(role_id){
 }
 
 
+async function getScheduledHoursbyHour(Hour_Id){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from shift_info where Hour_ID = ?', [Hour_Id], function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+                    out = { 
+                                            "WO_Count" : element["WO_Count"], 
+                                            "Shift_Role" : element["Shift_Role"],
+                                            "WorkerName" : element["Worker_ID"],
+                                            "Shift_Id" : element["id"]
+                                        }
+                });
+                resolve(out);        
+           }
+           else
+           {
+               //console.log("No Hours found")
+               resolve([])
+           }
+        })
+      })
+}
+
+
+
 async function compileWeekSchedulingObj(Worker_ID, Month_Id, WeekPlacement){
 
         UserInfo = await getUserInfoById(Worker_ID);
@@ -441,13 +807,59 @@ async function compileWeekSchedulingObj(Worker_ID, Month_Id, WeekPlacement){
             "WO_Count": temp["WO_Count"]  || "",
             "ShiftRoleName": shiftRoleInfo["ShiftName"] || "",
             "ShiftRoleColor": shiftRoleInfo["Color"] || "",
-            "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || ""
-
+            "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || "",
+            "Shift_Id" : temp["Shift_Id"]
             }
         }
         ByHours[i] = hours; 
     }
     return(ByHours)
+}
+
+async function compileWeekSchedulingObjAllUsers(Month_Id, WeekPlacement){
+
+    WeekByMonth =  await getScheduleWeekIdbyPlacement(WeekPlacement, Month_Id);
+    DayAndPlace = await getScheduleDaysPlaceandIdsByWeek(WeekByMonth[0]); //Returns Dictionary of
+    HourAndPlace = {}
+    for (i = 0; i < 7; i++){
+        const temp = await getScheduleHoursPlacmentandIdsByDay(DayAndPlace[i]); //Returns dictionary of 24 Hours
+        HourAndPlace[i]= temp;                                            //Has keys of the placement
+    }
+ByHours = {}
+for(i=0; i<7; i++){
+    hours = {}
+    for(x=0; x < 24; x++){
+    temp = await getScheduledHoursbyHour(HourAndPlace[i][x])
+    shiftRoleInfo = await getShiftRoleInfoById(temp["Shift_Role"]);
+     hours[x] = {
+        "HourId": HourAndPlace[i][x],
+        "WO_Count": temp["WO_Count"]  || "",
+        "ShiftRoleName": shiftRoleInfo["ShiftName"] || "",
+        "ShiftRoleColor": shiftRoleInfo["Color"] || "",
+        "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || "",
+        "Shift_Id" : temp["Shift_Id"]
+
+        }
+    }
+    ByHours[i] = hours; 
+}
+return(ByHours)
+}
+
+function setUserRole(user_id, role_id){
+    
+    connection.query('UPDATE `users` SET isAdmin=? WHERE id=? ', [role_id, user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
 }
 
 
@@ -678,21 +1090,29 @@ function currentYear(){
 
 
 app.use((req,res,next)=>{
-   console.log(req.session);
-   console.log(req.user);
+   //console.log(req.session);
+   //console.log(req.user);
    next();
 });
 
 
 // Routes
-app.get('/', async(req, res, next) => {
+app.get('/', isConnected, async(req, res, next) => {
     //createMonth("March", 2022)
     //const ids = await compileWeekSchedulingObj(4,4,0);
     //console.log(ids)
     //createScheduleHour(44, 4, 1, 2)
+    //console.log(req.user.username.toString())
+    var info = {"Authenticated" : false};
+    console.log(req.user)
+    if(req.user){
+        info["Authenticated"] = true;
+    }
+
     date = getCurrentMonthandWeek();
     confirmation = await createMonthIfNotExist(date["month"], currentYear())
-    res.render('index')
+    console.log(info)
+    res.render('index',{"User":{"Authenticated":info["Authenticated"]}})
 });
 
 app.get('/index', (req, res, next) => {
@@ -700,8 +1120,105 @@ app.get('/index', (req, res, next) => {
     res.redirect('/')
 });
 
+app.get('/Trade-Shift',isConnected,isAuth, async(req, res, next) => {
 
-app.get('/Full-Schedule',isAuth, async(req, res, next) => {
+    res.render('Trade-Shift')
+
+});
+
+app.post('/Trade-Shift',isConnected,isAuth, async(req, res, next) => {
+    console.log("Trade-Shift",req.body)
+    res.render('Trade-Shift')
+
+});
+
+app.get('/User-Management',isConnected,isAuth, async(req, res, next) => {
+    var users = await getAllUsersWithRole()
+    var roles = await getAllUserRoles();
+    for(var key in users){
+        users[key]["Role"] = roles[users[key]["Role"]]["Name"];
+    }
+    res.render('User-Management', {"Users":users})
+
+});
+
+app.post('/User-Management', isAuth, async(req,res, next)=>{
+    
+    if(req.body.Action === "Edit"){
+        var user = await getUserInfoById(req.body.userId)
+        var userInfo = {
+            "UserId": user.id,
+            "FName": user.fname,
+            "LName": user.lname,
+            "Email": user.email,
+            "Birthday": user.birthday,
+            "Phone": user.phone,
+            "Avalability" : await getAvalabilityById(user.id)
+        }
+        res.render('User-Settings', userInfo)
+    } else if(req.body.Action === "Toggle"){
+        var user = await getUserInfoById(req.body.userId)
+        
+        if(user.role === 1){
+            setUserRole(user.id, 0)
+        } else{
+            setUserRole(user.id, 1)
+        }
+        res.sendStatus(200)
+
+    } else {
+        deleteUserById(req.body.userId);
+        res.sendStatus(200)
+    }
+    
+})
+
+app.post('/Delete-Role', isAuth, async(req,res, next)=>{
+    
+        deleteRoleById(req.body.Id);
+        res.sendStatus(200);
+    
+})
+
+app.get('/New-Password', isConnected,(req, res, next) => {
+    res.render('New-Password', {"Username": req.user.username})
+
+});
+
+app.get('/User-Settings', isConnected, isAuth, async(req, res, next) => {
+    var userInfo = {
+        "UserId": req.user.id,
+        "FName": req.user.fname,
+        "LName": req.user.lname,
+        "Email": req.user.email,
+        "Birthday": req.user.birthday,
+        "Phone": req.user.phone,
+        "Avalability" : await getAvalabilityById(req.user.id)
+    }
+   
+    res.render('User-Settings', userInfo)
+
+});
+
+app.post('/User-Settings', (req, res, next)=>{
+    user = req.body
+    connection.query('UPDATE `users` SET fname=?, lname=?, email=?, birthday=?, phone=? WHERE id=? ', [user.First_Name, user.Last_Name, user.Email, user.Birthday, user.Phone, user.UserId], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+})
+
+
+
+app.get('/Full-Schedule',isConnected,isAuth, async(req, res, next) => {
     fullInfo = {}
     currDate = getCurrentMonthandWeek()
     fullInfo["DateInfo"] = {
@@ -710,50 +1227,123 @@ app.get('/Full-Schedule',isAuth, async(req, res, next) => {
         "Month": getMonthFromValue(currDate["month"]),
         "Year": currentYear()
     }
-    console.log("Sched: " + currDate["week"])
-    fullInfo["info"] = await compileWeekSchedulingObj(4, await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
+    fullInfo["user"] = {
+        "userId" : req.user.id,
+        "userName" : req.user.username,
+        "isAdmin" : req.user.isAdmin
+    }
+    fullInfo["Users"] = await getAllUsersWithRole();
+    fullInfo["Roles"] = await getAllShiftRoles();
+    fullInfo["info"] = await compileWeekSchedulingObjAllUsers(await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
     //console.log(fullInfo["info"])
     res.render('Full-Schedule', fullInfo);
 });
 
-app.get('/My-Schedule',isAuth,(req, res, next) => {
-    res.render('my-Schedule');
+app.get('/My-Schedule',isConnected,isAuth, async(req, res, next) => {
+    fullInfo = {}
+    console.log("SHouldgnt get hit")
+    currDate = getCurrentMonthandWeek()
+    fullInfo["DateInfo"] = {
+        "Day": currDate["day"],
+        "Week": currDate["week"],
+        "Month": getMonthFromValue(currDate["month"]),
+        "Year": currentYear()
+    }
+
+    fullInfo["user"] = {
+        "userId" : req.user.id,
+        "userName" : req.user.username,
+        "isAdmin" : req.user.isAdmin
+    }
+
+    console.log(fullInfo["user"])
+
+
+    fullInfo["Users"] = await getAllUsersWithRole();
+    fullInfo["Roles"] = await getAllShiftRoles();
+    fullInfo["info"] = await compileWeekSchedulingObj(req.user.id, await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
+    res.render('my-Schedule', fullInfo);
 });
 
 
+app.get('/Forgot-Password',isConnected, (req, res, next)=>{
+    res.render('Forgot-Password');
+})
+
+app.post('/Forgot-Password', isConnected, async (req, res, next)=>{
+    var username = req.body.username
+    
+    if(!username){
+        getUserInfoById(req.body.userId).then(result=>{
+            res.render('New-Password', {"Username": result["username"]})
+        })
+    }else{
+        res.render('New-Password', {"Username": username })
+    }
+    
+})
 
 
-app.get('/login', (req, res, next) => {
+app.get('/login', isConnected,(req, res, next) => {
         res.render('login');
 });
-app.get('/logout', (req, res, next) => {
+app.get('/logout', isConnected,(req, res, next) => {
     req.logout(); //delets the user from the session
-    res.redirect('/protected-route');
+    res.redirect('/login');
 });
-app.get('/login-success', (req, res, next) => {
+app.get('/login-success', isConnected,(req, res, next) => {
     res.send('<p>You successfully logged in. --> <a href="/protected-route">Go to protected route</a></p>');
 });
 
-app.get('/login-failure', (req, res, next) => {
+app.get('/login-failure', isConnected,(req, res, next) => {
     res.send('You entered the wrong password.');
 });
 
 
-app.get('/register', (req, res, next) => {
-    console.log("Inside get");
-    res.render('register')
+app.get('/register', isConnected,(req, res, next) => {
+    
+    var info = {"Authenticated" : false};
+    console.log(req.user)
+    if(req.user){
+        info["Authenticated"] = true;
+    }
+
+    res.render('register',{"User":{"Authenticated":info["Authenticated"]}})
     
 });
 
-app.post('/register', userExists,(req,res,next)=>{
-    console.log("Inside post");
-    console.log(req.body.pw);
-    const saltHash=genPassword(req.body.pw);
-    console.log(saltHash);
+app.post('/New-Password', async (req,res, next)=>{
+    const userId = await getUserInfoByUserName(req.body.Username) || await getUserInfoById(req.body.userId);
+    const saltHash=genPassword(req.body.password);
     const salt=saltHash.salt;
     const hash=saltHash.hash;
 
-    connection.query('INSERT INTO users(username,hash,salt,isAdmin) values(?,?,?,0) ', [req.body.uname,hash,salt], function(error, results, fields) {
+    connection.query('UPDATE `users` SET hash=?, salt=? WHERE id=? ', [hash, salt, userId], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+
+    res.redirect('/logout');
+
+});
+
+
+app.post('/register', userExists,(req,res,next)=>{
+    console.log("Inside post");
+    //console.log(req.body);
+    const saltHash=genPassword(req.body.password);
+    const salt=saltHash.salt;
+    const hash=saltHash.hash;
+
+    connection.query('INSERT INTO users(username,hash,salt,isAdmin, fname, lname) values(?,?,?,1,?,?) ', [req.body.username,hash,salt,req.body.fname, req.body.lname], function(error, results, fields) {
         if (error) 
             {
                 console.log("Error Inserting");
@@ -770,15 +1360,26 @@ app.post('/register', userExists,(req,res,next)=>{
 });
 
 app.post('/PlaceWorker', (req, res, next)=>{
-    console.log(req.body);
-    createScheduleHour(req.body["Hour_Id"], 4, 1, 1)
-   //res.sendStatus("200")
-    res.redirect("/Full-Schedule")
+    console.log(req.body)
+    createScheduleHour(req.body["Hour_Id"], req.body["selectname"], req.body["selectrole"], req.body['workordercount'])
+    res.sendStatus("200")
+})
+
+app.post('/DeleteShift', (req, res, next)=>{
+    console.log(req.body)
+    deleteShiftById(req.body["Shift_Id"])
+    res.sendStatus("200")
+})
+
+app.post('/PlaceAvalability', (req, res, next)=>{
+    console.log(req.body)
+    createAvalability(req.body["Hour"], req.body["Day"], req.body["UserId"])
+    res.sendStatus(200)
 })
 
 app.post('/login',passport.authenticate('local',{failureRedirect:'/login-failure',successRedirect:'/'}));
 
-app.get('/protected-route',isAuth,(req, res, next) => {
+app.get('/protected-route',isConnected,isAuth,(req, res, next) => {
  
     res.send('<h1>You are authenticated</h1><p><a href="/logout">Logout and reload</a></p>');
 });
@@ -791,12 +1392,18 @@ app.get('/admin-route',isAdmin,(req, res, next) => {
 
 app.get('/notAuthorized', (req, res, next) => {
     console.log("Inside get");
-    res.send('<h1>You are not authorized to view the resource </h1><p><a href="/login">Retry Login</a></p>');
+    var info = {"Authenticated" : false};
+    console.log(req.user)
+    if(req.user){
+        info["Authenticated"] = true;
+    }
+
+    res.render("Access-Denied",{"User":{"Authenticated":info["Authenticated"]}})
     
 });
 app.get('/notAuthorizedAdmin', (req, res, next) => {
     console.log("Inside get");
-    res.send('<h1>You are not authorized to view the resource as you are not the admin of the page  </h1><p><a href="/login">Retry to Login as admin</a></p>');
+    res.render("Access-Denied");
     
 });
 app.get('/userAlreadyExists', (req, res, next) => {
@@ -805,9 +1412,80 @@ app.get('/userAlreadyExists', (req, res, next) => {
     
 });
 
+app.get('/Admin-Settings', isConnected, (req, res, next)=>{
+    res.render("Admin-Settings", databaseInfo)
+})
+
+app.post('/Admin-Settings', (req, res, next) =>{
+    fs.writeFileSync('./dataStores/databaseinfo.txt', JSON.stringify(req.body))
+    res.sendStatus(200)
+})
+
+app.get('/Notifications', isConnected, isAuth,(req,res,next)=>{
+    res.render("Notifications")
+})
+
+app.get('/Role-Management', isConnected, isAuth, async(req, res, next)=>{
+    var roles = await getAllShiftRoles();
+    res.render("Role-Management", {"Roles":roles})
+})
+
+app.post('/Role-Management', async(req, res, next)=>{
+    console.log(req.body)
+    if(req.body["role-id"] != -1){
+    connection.query('UPDATE `shift_roles` SET name=?, color=? WHERE id=? ', [req.body.name, req.body.color_picker.substring(1), req.body['role-id']], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+ } else {
+    connection.query('Insert into `shift_roles` SET name=?, color=? ', [req.body.name, req.body.color_picker.substring(1)], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+ }
+
+ res.sendStatus(200);
+})
+
+
+app.get('/Role-Popup', isConnected, isAuth, (req, res, next)=>{
+    res.render("Role-Popup")
+})
+
+app.get('/Trade-Shift-Approval', isConnected, isAuth, (req, res, next)=>{
+    res.render("Trade-Shift-Approval")
+})
+
+app.get('/Request-Off-Approval', isConnected, isAuth, (req, res, next)=>{
+    res.render("Request-Off-Approval")
+})
+
+app.get('/Cover-shift-Approval', isConnected, isAuth, (req, res, next)=>{
+    res.render("Cover-shift-Approval")
+})
+
+app.get('/Pop-Up', isConnected, isAuth, (req, res, next)=>{
+    res.render("Pop-Up")
+})
+
 
 //Start App
-
 app.listen(port, function() {
     console.log('App listening on port %d!',port)
   });
