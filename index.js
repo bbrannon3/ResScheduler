@@ -881,7 +881,22 @@ function createScheduleHour(hourId, workerId, shiftRole, woCount = 0){
 
 function createAvalability(hour, day, user_id){
 
+    currentAvalability = null;
 
+    connection.query('SELECT avalability from user_avalablility WHERE hour = ? AND day = ? AND user_id =?', [hour, day, user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else if(results.length>0){
+            results.forEach(element => {
+                currentAvalability = element["avalability"]
+            })
+
+        }
+        });
+    
     connection.query('Delete from user_avalablility WHERE hour = ? AND day = ? AND user_id =?', [hour, day, user_id], function(error, results, fields) {
         if (error) 
             {
@@ -896,15 +911,19 @@ function createAvalability(hour, day, user_id){
                         console.log("Error Inserting");
                         console.log(error)
                     }
-                else
-                {
-                    
-            
-        
-                }
                 
             });
             
+
+        } else if (currentAvalability === 0) {
+            connection.query('Insert into user_avalablility(hour,day,user_id,avalability) values(?,?,?,1)', [hour, day, user_id], function(error, results, fields) {
+                if (error) 
+                    {
+                        console.log("Error Inserting");
+                        console.log(error)
+                    }
+                
+            });
 
         }
         
@@ -1080,6 +1099,7 @@ async function getAvalabilityById(user_id){
                         }
                 i+=1;
             });
+            console.log(out)
             resolve(out);        
        }
        else
