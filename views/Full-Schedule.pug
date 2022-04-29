@@ -128,7 +128,7 @@ html(style='font-size: 16px;')
                     i.fa-solid.icon-white.fa-caret-left.fa-2xl
                   -var date = DateInfo["Month"] + " " + DateInfo["Day"] + ", " + DateInfo["Year"]
                     strong= "Week of " + date
-                  a(href='#' onclick="offSetWeek('"+(DateInfo["OffSet"]+1)+"')")
+                  a(href='#' onclick="offSetWeek('"+(parseInt(DateInfo["OffSet"])+1)+"')")
                     i.fa-solid.icon-white.fa-caret-right.fa-2xl
             tbody
               tr
