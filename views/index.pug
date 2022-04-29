@@ -36,22 +36,23 @@ html(style='font-size: 16px;')
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='User-Settings' style='padding: 10px 20px;') Preferences
               li.u-nav-item
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='My-Schedule' style='padding: 10px 20px;') Schedule Viewer
-              li.u-nav-item
-                a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
-                .u-nav-popup
-                  ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
+              if User["isAdmin"]
+                li.u-nav-item
+                  a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
+                  .u-nav-popup
+                    ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
               li.u-nav-item
                 if !User['Authenticated']
                   a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Login' style='padding: 10px 20px;') Login
@@ -71,22 +72,23 @@ html(style='font-size: 16px;')
                       a.u-button-style.u-nav-link(href='Login') Login
                     else
                       a.u-button-style.u-nav-link(href='Logout') Logout
-                  li.u-nav-item
-                    a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
-                    .u-nav-popup
-                      ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
+                  if User["isAdmin"]
+                    li.u-nav-item
+                      a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
+                      .u-nav-popup
+                        ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
             .u-black.u-menu-overlay.u-opacity.u-opacity-70
           style.offcanvas-style.
             .u-offcanvas .u-sidenav { flex-basis: 250px !important; }            .u-offcanvas:not(.u-menu-open-right) .u-sidenav { margin-left: -250px; }            .u-offcanvas.u-menu-open-right .u-sidenav { margin-right: -250px; }            @keyframes menu-shift-left    { from { left: 0;        } to { left: 250px;  } }            @keyframes menu-unshift-left  { from { left: 250px;  } to { left: 0;        } }            @keyframes menu-shift-right   { from { right: 0;       } to { right: 250px; } }            @keyframes menu-unshift-right { from { right: 250px; } to { right: 0;       } }

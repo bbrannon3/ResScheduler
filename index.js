@@ -401,6 +401,103 @@ async function getScheduleHoursPlacmentandIdsByDay(day_id){
   })
 }
 
+async function getAllTradeShifts(){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from shift_trades', function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+
+                    out[element["idshift_trades"]] = {
+                        "Requester": element["requester_id"],
+                        "Requestee": element["requestee_id"],
+                        "RequesterShift": element["shift_1"],
+                        "RequesteeShift": element["shift_2"]
+
+                    }     
+                });
+                resolve(out);        
+           }
+           else
+           {
+               console.log("Hours Not found")
+               resolve([])
+           }
+        })
+      })
+
+}
+
+async function getAllTimeOffRequest(){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from request_off', function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+
+                    out[element["idrequest_off"]] = {
+                        "Requester": element["user_id"],
+                        "RequesterShift": element["shift_id"],
+                        "RequesterReason": element["reason"]
+
+                    }     
+                });
+                resolve(out);        
+           }
+           else
+           {
+               console.log("Hours Not found")
+               resolve([])
+           }
+        })
+      })
+
+}
+
+async function getAllCoverRequest(){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from cover_shift', function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+
+                    out[element["idcover_shift"]] = {
+                        "Requester": element["requester_id"],
+                        "Coveree": element["coveree"],
+                        "RequesterShift": element["shift_id"],
+
+                    }     
+                });
+                resolve(out);        
+           }
+           else
+           {
+               console.log("Hours Not found")
+               resolve([])
+           }
+        })
+      })
+
+}
+
 
 async function getScheduledHoursForUser(user_id){
     return new Promise(resolve =>{
@@ -424,6 +521,244 @@ async function getScheduledHoursForUser(user_id){
        else
        {
            //console.log("No Hours found")
+           resolve([])
+       }
+    })
+  })
+}
+
+async function getDayByShift(shift_id){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from schedule_days where idSchedule_Days in (Select Day_Id from schedule_hours where idSchedule_Hours in (Select Hour_ID from shift_info where id = ?))', [shift_id], function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+                    out = { 
+                        "Day_Id":element["idSchedule_Days"], 
+                        "Day":element["Day"],
+                        "Week_Id":element["Week_Id"]
+                                            
+                         }
+                });
+                resolve(out);        
+           }
+           else
+           {
+               //console.log("No Hours found")
+               resolve([])
+           }
+        })
+      })
+}
+
+async function getHourByShift(shift_id){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from schedule_hours where idSchedule_Hours in (Select Hour_ID from shift_info where id = ?)', [shift_id], function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+                    out = { 
+                        "Hour_Id": element["idSchedule_Hours"], 
+                        "Hour":element["Hour"],
+                        "Day_Id":element["Day_Id"]
+                                            
+                         }
+                });
+                resolve(out);        
+           }
+           else
+           {
+               //console.log("No Hours found")
+               resolve([])
+           }
+        })
+      })
+}
+
+async function getWeekById(week_id){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from schedule_weeks where idSchedule_Weeks = ?', [week_id], function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+                    out = {  
+                        "Month_Id":element["Month_Id"],
+                        "Place": element["Place"]
+                                            
+                         }
+                });
+                resolve(out);        
+           }
+           else
+           {
+               //console.log("No Hours found")
+               resolve([])
+           }
+        })
+      })
+}
+
+async function getMonthById(month_id){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from schedule_months where idSchedule_Months = ?', [month_id], function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+                    out = {  
+                        "Month":element["Month"],
+                        "Year": element["Year"]
+                                            
+                         }
+                });
+                resolve(out);        
+           }
+           else
+           {
+               //console.log("No Hours found")
+               resolve([])
+           }
+        })
+      })
+}
+
+async function getHourInfo(hour_id){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from schedule_hours where idSchedule_Hours = ?', [hour_id], function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+                    out = {  
+                        "Hour_Id":element["idSchedule_Hours"],
+                        "Hour_Place": element["Hour"],
+                        "Hour_Day": element["Day_Id"]
+                                            
+                         }
+                });
+                resolve(out);        
+           }
+           else
+           {
+               //console.log("No Hours found")
+               resolve([])
+           }
+        })
+      })
+}
+
+async function getDayByHour(hour_id){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from schedule_days where idSchedule_Days in (Select Day_Id from schedule_hours where idSchedule_Hours = ?)', [hour_id], function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+                    out = {  
+                        "Day_Id": element["idSchedule_Days"],
+                        "Placement":element["Day"],
+                        "Week_Id": element["Week_Id"]
+                                            
+                         }
+                });
+                resolve(out);        
+           }
+           else
+           {
+               //console.log("No Hours found")
+               resolve([])
+           }
+        })
+      })
+}
+
+
+async function getUserShiftsForWeek(worker_id, week_id){
+    return new Promise(resolve =>{
+        out = {};
+        connection.query('Select * from shift_info where Worker_ID = ? AND Hour_ID in (Select idSchedule_Hours from schedule_hours where Day_Id in (Select idSchedule_Days from schedule_days where Week_Id = ?))', [worker_id, week_id], function(error, results, fields){
+            if (error) 
+               {
+                   console.log(error);
+               }
+          else if(results.length>0)
+            {
+                
+                results.forEach(element => {
+                    out[element["id"]] = {  
+                            "Hour_Id": element["Hour_ID"]
+                                            
+                         }
+                });
+
+                resolve(out);        
+           }
+           else
+           {
+               //console.log("No Hours found")
+               resolve([])
+           }
+        })
+      })
+}
+
+
+
+async function getDOTM(day_id, month_name, year){
+    return new Promise(resolve =>{
+        out = {};
+    connection.query('Select count(idSchedule_Days) as Days from user.schedule_days Where (idSchedule_Days < ? and Week_Id in (Select idSchedule_Weeks from user.schedule_weeks where Month_Id in (Select idSchedule_Months from user.schedule_months where Month = ? and Year = ?)))', [day_id, month_name, year], function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            
+            results.forEach(element => {
+                out = { 
+                                       "DOTM": element["Days"]+2
+                                    }
+            });
+            console.log("Dotm:",out.DOTM)
+            resolve(out);        
+       }
+       else
+       {
+           console.log("Couldnt Find DOTM")
            resolve([])
        }
     })
@@ -459,6 +794,71 @@ async function getScheduledHoursForUserByHour(user_id, hourId){
        }
     })
   })
+}
+
+
+async function changeShiftWorker(shift_id, worker_id){
+    connection.query('UPDATE `shift_info` SET Worker_ID=? WHERE id=? ', [worker_id, shift_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+
+}
+
+async function deleteTradeById(trade_id){
+
+    connection.query('Delete from shift_trades where idshift_trades=? ', [trade_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
+}
+
+async function deleteTimeOffById(request_id){
+
+    connection.query('Delete from request_off where idrequest_off=? ', [request_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
+}
+
+async function deleteCoverById(request_id){
+
+    connection.query('Delete from cover_shift where idcover_shift=? ', [request_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Delete Error: ", error);
+            }
+       else if(results.length>0)
+         {
+            console.log(results)
+        }
+       
+    });
+
 }
 
 
@@ -807,6 +1207,7 @@ async function compileWeekSchedulingObj(Worker_ID, Month_Id, WeekPlacement){
             "WO_Count": temp["WO_Count"]  || "",
             "ShiftRoleName": shiftRoleInfo["ShiftName"] || "",
             "ShiftRoleColor": shiftRoleInfo["Color"] || "",
+            "ShiftRoleId": temp["Shift_Role"] || "",
             "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || "",
             "Shift_Id" : temp["Shift_Id"]
             }
@@ -831,15 +1232,19 @@ for(i=0; i<7; i++){
     for(x=0; x < 24; x++){
     temp = await getScheduledHoursbyHour(HourAndPlace[i][x])
     shiftRoleInfo = await getShiftRoleInfoById(temp["Shift_Role"]);
+    workerInfo = await getUserInfoById(temp["WorkerName"])
      hours[x] = {
         "HourId": HourAndPlace[i][x],
         "WO_Count": temp["WO_Count"]  || "",
         "ShiftRoleName": shiftRoleInfo["ShiftName"] || "",
         "ShiftRoleColor": shiftRoleInfo["Color"] || "",
-        "WorkerName": (await getUserInfoById(temp["WorkerName"]))["username"] || "",
+        "ShiftRoleId": temp["Shift_Role"] || "",
+        "WorkerName": workerInfo["username"] || "",
+        "WorkerId" : temp["WorkerName"] || "",
         "Shift_Id" : temp["Shift_Id"]
 
         }
+        //console.log(temp["WorkerName"])
     }
     ByHours[i] = hours; 
 }
@@ -849,6 +1254,22 @@ return(ByHours)
 function setUserRole(user_id, role_id){
     
     connection.query('UPDATE `users` SET isAdmin=? WHERE id=? ', [role_id, user_id], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            console.log("Successfully Entered");
+        }
+       
+    });
+}
+
+function editScheduleHour(Shift_Id, selectname, selectrole, workordercount){
+    
+    connection.query('UPDATE `shift_info` SET Worker_ID=?, Shift_Role=?, WO_Count=? WHERE id=? ', [selectname, selectrole, workordercount, Shift_Id], function(error, results, fields) {
         if (error) 
             {
                 console.log("Error Inserting");
@@ -882,7 +1303,7 @@ function createMonth(month, year){
             }
             for( i = 0; i<end; i++){
                 
-                createWeek(results["insertId"], i, year)
+                createWeek(results["insertId"], i, year, month)
             }
         }
         
@@ -924,7 +1345,7 @@ async function createMonthIfNotExist(month, year){
 }
 
 
-function createWeek(month, placement, year){
+function createWeek(month, placement, year, month_name){
     connection.query('Insert into schedule_weeks(Month_Id,Place) values(?,?)', [month,placement], function(error, results, fields) {
         if (error) 
             {
@@ -936,7 +1357,7 @@ function createWeek(month, placement, year){
             console.log("Successfully added week " + placement);
             //TO-DO Add offset for weeks at the beginning and end of the month that dont have 7 days or start on Sunday or end on Saturday
             if (placement == 0){
-                start = calculateFirstDay(year, month);
+                start = calculateFirstDay(year, getMonthValue(month_name));
             } else {
                 start = 0;
             }
@@ -952,6 +1373,51 @@ function createWeek(month, placement, year){
                 
                 createDay(results["insertId"], i)
             }
+        }
+        
+    });
+}
+
+function addShiftTradeRequest(requester, requestee, requester_shift, requestee_shift){
+    connection.query('Insert into shift_trades(requester_id, requestee_id, shift_1, shift_2) values(?,?,?,?)', [requester, requestee, requester_shift, requestee_shift], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            
+        }
+        
+    });
+}
+
+function addTimeOffRequest(Reason, Shift, User){
+    connection.query('Insert into request_off(reason, shift_id, user_id) values(?,?,?)', [Reason, Shift, User], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            
+        }
+        
+    });
+}
+
+function addCoverRequest(Shift, Coverer, Coveree){
+    connection.query('Insert into cover_shift(requester_id, coveree, shift_id) values(?,?,?)', [Coverer, Coveree, Shift], function(error, results, fields) {
+        if (error) 
+            {
+                console.log("Error Inserting");
+                console.log(error)
+            }
+        else
+        {
+            
         }
         
     });
@@ -1060,6 +1526,85 @@ function getMonthFromValue(month){
     
 }
 
+function getTimeFromPlace(place){
+    var time = ""
+    switch(place.toString()){
+        case("0"):
+            time = "12:00 AM"
+            break;
+        case("1"):
+            time = "1:00 AM"
+            break;
+        case("2"):
+            time = "2:00 AM"
+            break;
+        case("3"):
+            time = "3:00 AM"
+            break;
+        case('4'):
+            time = "4:00 AM"
+            break;
+        case('5'):
+            time = "5:00 AM"
+            break;
+        case('6'):
+            time = "6:00 AM"
+            break;
+        case('7'):
+            time = "7:00 AM"
+            break;
+        case('8'):
+            time = "8:00 AM"
+            break;
+        case('9'):
+            time = "9:00 AM"
+            break;
+        case('10'):
+            time = "10:00 AM"
+            break;
+        case('11'):
+            time = "11:00 AM"
+            break;
+        case('12'):
+            time = "12:00 PM"
+            break;
+        case('13'):
+            time = "1:00 PM"
+            break;
+        case('14'):
+            time = "2:00 PM"
+            break;
+        case('15'):
+            time = "3:00 PM"
+            break;
+        case('16'):
+            time = "4:00 PM"
+            break;
+        case('17'):
+            time = "5:00 PM"
+            break;
+        case('18'):
+            time = "6:00 PM"
+            break;
+        case('19'):
+            time = "7:00 PM"
+            break;
+        case('20'):
+            time = "8:00 PM"
+            break;
+        case('21'):
+            time = "9:00 PM"
+            break;
+        case('22'):
+            time = "10:00 PM"
+            break;
+        case('23'):
+            time = "11:00 PM"
+            break;
+    }
+    return time
+}
+
 function getCurrentMonthandWeek(){
     d = new Date
     month = d.getMonth();
@@ -1069,6 +1614,22 @@ function getCurrentMonthandWeek(){
     return {"week":week,
             "month":month,
             "day": day
+}
+}
+
+function getRelativeMonthandWeek(offSet){
+    d = new Date
+    n = d.getDate() + (7 * offSet)
+    d.setDate(n);
+    month = d.getMonth();
+    week = d.getWeekOfMonth();
+    console.log("Week:" + week)
+    day = d.getDate();
+    year = d.getFullYear();
+    return {"week":week,
+            "month":month,
+            "day": day,
+            "year": year
 }
 }
 
@@ -1098,21 +1659,20 @@ app.use((req,res,next)=>{
 
 // Routes
 app.get('/', isConnected, async(req, res, next) => {
-    //createMonth("March", 2022)
-    //const ids = await compileWeekSchedulingObj(4,4,0);
-    //console.log(ids)
-    //createScheduleHour(44, 4, 1, 2)
-    //console.log(req.user.username.toString())
-    var info = {"Authenticated" : false};
-    console.log(req.user)
+    var info = {"Authenticated" : false,
+        "isAdmin" : false
+    };
+   
     if(req.user){
         info["Authenticated"] = true;
+        if(req.user.isAdmin === 0){
+            info.isAdmin = true
+        }
     }
 
-    date = getCurrentMonthandWeek();
-    confirmation = await createMonthIfNotExist(date["month"], currentYear())
-    console.log(info)
-    res.render('index',{"User":{"Authenticated":info["Authenticated"]}})
+    //console.log(info.isAdmin)
+    
+    res.render('index',{"User":{"Authenticated":info["Authenticated"], "isAdmin":info.isAdmin}})
 });
 
 app.get('/index', (req, res, next) => {
@@ -1128,11 +1688,43 @@ app.get('/Trade-Shift',isConnected,isAuth, async(req, res, next) => {
 
 app.post('/Trade-Shift',isConnected,isAuth, async(req, res, next) => {
     console.log("Trade-Shift",req.body)
-    res.render('Trade-Shift')
+    workerInfo = await getUserInfoById(req.body.worker_id);
+    dateInfo = await getDayByShift(req.body.shift_id);
+    console.log(dateInfo)
+    weekInfo = await getWeekById(dateInfo.Week_Id);
+    RequesterShifts = await getUserShiftsForWeek(req.user.id, dateInfo.Week_Id);
+    for(key in RequesterShifts){
+        day = await getDayByShift(key);
+        hour = await getHourInfo(RequesterShifts[key]["Hour_Id"]);
+        RequesterShifts[key]["Day"] = (await getDOTM(day["Day_Id"], req.body.month, req.body.year)).DOTM;
+        RequesterShifts[key]["Time"] = getTimeFromPlace(hour["Hour_Place"]);
+    }
+    CurrentDotm = (await getDOTM(dateInfo["Day_Id"], req.body.month, req.body.year)).DOTM;
+
+    info = {
+        "RequesterUser" : req.user.id,
+        "RequesteeUser" : req.body.worker_id,
+        "RequesterShifts": RequesterShifts,
+        "Fname": workerInfo.fname,
+        "Lname": workerInfo.lname,
+        "ShiftId" : req.body.shift_id,
+        "ShiftRole" : req.body.role_name,
+        "Time" : req.body.time,
+        "Month": req.body.month,
+        "Day" : CurrentDotm,
+        "Year" : req.body.year
+    }
+    console.log(info)
+    res.render('Trade-Shift', info)
 
 });
 
-app.get('/User-Management',isConnected,isAuth, async(req, res, next) => {
+app.post('/Submit-Trade', isConnected, isAuth, (req, res, next)=>{
+    addShiftTradeRequest(req.body.RequesterId,req.body.RequesteeId, req.body.RequesterShift, req.body.RequesteeShift);
+    res.redirect('/')
+})
+
+app.get('/User-Management',isConnected,isAuth,isAdmin, async(req, res, next) => {
     var users = await getAllUsersWithRole()
     var roles = await getAllUserRoles();
     for(var key in users){
@@ -1142,7 +1734,7 @@ app.get('/User-Management',isConnected,isAuth, async(req, res, next) => {
 
 });
 
-app.post('/User-Management', isAuth, async(req,res, next)=>{
+app.post('/User-Management', isAuth,isAdmin, async(req,res, next)=>{
     
     if(req.body.Action === "Edit"){
         var user = await getUserInfoById(req.body.userId)
@@ -1153,7 +1745,8 @@ app.post('/User-Management', isAuth, async(req,res, next)=>{
             "Email": user.email,
             "Birthday": user.birthday,
             "Phone": user.phone,
-            "Avalability" : await getAvalabilityById(user.id)
+            "Avalability" : await getAvalabilityById(user.id),
+            "isAdmin": req.user.isAdmin === 0
         }
         res.render('User-Settings', userInfo)
     } else if(req.body.Action === "Toggle"){
@@ -1193,7 +1786,8 @@ app.get('/User-Settings', isConnected, isAuth, async(req, res, next) => {
         "Email": req.user.email,
         "Birthday": req.user.birthday,
         "Phone": req.user.phone,
-        "Avalability" : await getAvalabilityById(req.user.id)
+        "Avalability" : await getAvalabilityById(req.user.id),
+        "isAdmin": req.user.isAdmin === 0
     }
    
     res.render('User-Settings', userInfo)
@@ -1225,7 +1819,30 @@ app.get('/Full-Schedule',isConnected,isAuth, async(req, res, next) => {
         "Day": currDate["day"],
         "Week": currDate["week"],
         "Month": getMonthFromValue(currDate["month"]),
-        "Year": currentYear()
+        "Year": currentYear(),
+        "OffSet": 0
+    }
+    fullInfo["user"] = {
+        "userId" : req.user.id,
+        "userName" : req.user.username,
+        "isAdmin" : req.user.isAdmin
+    }
+    fullInfo["Users"] = await getAllUsersWithRole();
+    fullInfo["Roles"] = await getAllShiftRoles();
+    fullInfo["info"] = await compileWeekSchedulingObjAllUsers(await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
+    //console.log(fullInfo["info"])
+    res.render('Full-Schedule', fullInfo);
+});
+
+app.post('/Full-Schedule',isConnected,isAuth, async(req, res, next) => {
+    fullInfo = {}
+    currDate = getRelativeMonthandWeek(req.body.OffSet)
+    fullInfo["DateInfo"] = {
+        "Day": currDate["day"],
+        "Week": currDate["week"],
+        "Month": getMonthFromValue(currDate["month"]),
+        "Year": currDate["year"],
+        "OffSet": req.body.OffSet
     }
     fullInfo["user"] = {
         "userId" : req.user.id,
@@ -1241,13 +1858,13 @@ app.get('/Full-Schedule',isConnected,isAuth, async(req, res, next) => {
 
 app.get('/My-Schedule',isConnected,isAuth, async(req, res, next) => {
     fullInfo = {}
-    console.log("SHouldgnt get hit")
     currDate = getCurrentMonthandWeek()
     fullInfo["DateInfo"] = {
         "Day": currDate["day"],
         "Week": currDate["week"],
         "Month": getMonthFromValue(currDate["month"]),
-        "Year": currentYear()
+        "Year": currentYear(),
+        "OffSet": 0
     }
 
     fullInfo["user"] = {
@@ -1256,8 +1873,28 @@ app.get('/My-Schedule',isConnected,isAuth, async(req, res, next) => {
         "isAdmin" : req.user.isAdmin
     }
 
-    console.log(fullInfo["user"])
+    fullInfo["Users"] = await getAllUsersWithRole();
+    fullInfo["Roles"] = await getAllShiftRoles();
+    fullInfo["info"] = await compileWeekSchedulingObj(req.user.id, await createMonthIfNotExist(currDate["month"], fullInfo["DateInfo"]["Year"]),currDate["week"]);
+    res.render('my-Schedule', fullInfo);
+});
 
+app.post('/My-Schedule',isConnected,isAuth, async(req, res, next) => {
+    fullInfo = {}
+    currDate = getRelativeMonthandWeek(req.body.OffSet)
+    fullInfo["DateInfo"] = {
+        "Day": currDate["day"],
+        "Week": currDate["week"],
+        "Month": getMonthFromValue(currDate["month"]),
+        "Year": currDate["year"],
+        "OffSet": req.body.OffSet
+    }
+
+    fullInfo["user"] = {
+        "userId" : req.user.id,
+        "userName" : req.user.username,
+        "isAdmin" : req.user.isAdmin
+    }
 
     fullInfo["Users"] = await getAllUsersWithRole();
     fullInfo["Roles"] = await getAllShiftRoles();
@@ -1359,19 +1996,23 @@ app.post('/register', userExists,(req,res,next)=>{
     res.redirect('/login');
 });
 
-app.post('/PlaceWorker', (req, res, next)=>{
+app.post('/PlaceWorker', isAdmin,(req, res, next)=>{
     console.log(req.body)
-    createScheduleHour(req.body["Hour_Id"], req.body["selectname"], req.body["selectrole"], req.body['workordercount'])
+    if(req.body["Shift_Id"]==='undefined'){
+        createScheduleHour(req.body["Hour_Id"], req.body["selectname"], req.body["selectrole"], req.body['workordercount'])
+    } else {
+        editScheduleHour(req.body["Shift_Id"], req.body["selectname"], req.body["selectrole"], req.body['workordercount'])
+    }
     res.sendStatus("200")
 })
 
-app.post('/DeleteShift', (req, res, next)=>{
+app.post('/DeleteShift', isAdmin,(req, res, next)=>{
     console.log(req.body)
     deleteShiftById(req.body["Shift_Id"])
     res.sendStatus("200")
 })
 
-app.post('/PlaceAvalability', (req, res, next)=>{
+app.post('/PlaceAvalability', isAdmin,(req, res, next)=>{
     console.log(req.body)
     createAvalability(req.body["Hour"], req.body["Day"], req.body["UserId"])
     res.sendStatus(200)
@@ -1391,19 +2032,21 @@ app.get('/admin-route',isAdmin,(req, res, next) => {
 });
 
 app.get('/notAuthorized', (req, res, next) => {
-    console.log("Inside get");
     var info = {"Authenticated" : false};
-    console.log(req.user)
     if(req.user){
         info["Authenticated"] = true;
     }
-
+   
     res.render("Access-Denied",{"User":{"Authenticated":info["Authenticated"]}})
     
 });
 app.get('/notAuthorizedAdmin', (req, res, next) => {
-    console.log("Inside get");
-    res.render("Access-Denied");
+    var info = {"Authenticated" : false};
+    if(req.user){
+        info["Authenticated"] = true;
+    }
+   
+    res.render("Access-Denied",{"User":{"Authenticated":info["Authenticated"]}})
     
 });
 app.get('/userAlreadyExists', (req, res, next) => {
@@ -1425,12 +2068,12 @@ app.get('/Notifications', isConnected, isAuth,(req,res,next)=>{
     res.render("Notifications")
 })
 
-app.get('/Role-Management', isConnected, isAuth, async(req, res, next)=>{
+app.get('/Role-Management', isConnected, isAuth, isAdmin, async(req, res, next)=>{
     var roles = await getAllShiftRoles();
     res.render("Role-Management", {"Roles":roles})
 })
 
-app.post('/Role-Management', async(req, res, next)=>{
+app.post('/Role-Management', isAuth, isAdmin, async(req, res, next)=>{
     console.log(req.body)
     if(req.body["role-id"] != -1){
     connection.query('UPDATE `shift_roles` SET name=?, color=? WHERE id=? ', [req.body.name, req.body.color_picker.substring(1), req.body['role-id']], function(error, results, fields) {
@@ -1468,16 +2111,124 @@ app.get('/Role-Popup', isConnected, isAuth, (req, res, next)=>{
     res.render("Role-Popup")
 })
 
-app.get('/Trade-Shift-Approval', isConnected, isAuth, (req, res, next)=>{
-    res.render("Trade-Shift-Approval")
+app.get('/Trade-Shift-Approval', isConnected, isAuth, isAdmin, async(req, res, next)=>{
+    TradeShifts = await getAllTradeShifts()
+    
+    for(key in TradeShifts){
+        requester_info = await getUserInfoById(TradeShifts[key]["Requester"])
+        requestee_info = await getUserInfoById(TradeShifts[key]["Requestee"])
+
+        requester_hour = await getHourByShift(TradeShifts[key]["RequesterShift"])
+        requestee_hour = await getHourByShift(TradeShifts[key]["RequesteeShift"])
+
+        requester_time = await getTimeFromPlace(requester_hour["Hour"])
+        requestee_time = await getTimeFromPlace(requestee_hour["Hour"])
+
+        requester_day = await getDayByShift(TradeShifts[key]["RequesterShift"])
+        requestee_day = await getDayByShift(TradeShifts[key]["RequesteeShift"])
+
+        requester_week = await getWeekById(requester_day["Week_Id"])
+        requestee_week = await getWeekById(requestee_day["Week_Id"])
+
+        requester_month = await getMonthById(requester_week["Month_Id"])
+        requestee_month = await getMonthById(requestee_week["Month_Id"])
+
+        TradeShifts[key]["RequesterName"] = requester_info.fname + " " + requester_info.lname;
+        TradeShifts[key]["RequesteeName"] = requestee_info.fname + " " + requestee_info.lname;
+
+        TradeShifts[key]["RequesterTime"] = requester_month.Month + " " + (await getDOTM(requester_day["Day_Id"], requester_month.Month, requester_month.Year)).DOTM + ", " + requester_time
+        TradeShifts[key]["RequesteeTime"] = requestee_month.Month + " " + (await getDOTM(requestee_day["Day_Id"], requestee_month.Month, requestee_month.Year)).DOTM + ", " + requestee_time
+
+        TradeShifts[key]["TradeId"] = key
+        
+    }
+   
+    res.render("Trade-Shift-Approval", {"Shifts": TradeShifts})
 })
 
-app.get('/Request-Off-Approval', isConnected, isAuth, (req, res, next)=>{
-    res.render("Request-Off-Approval")
+app.post('/Trade-Shift-Approval', isConnected, isAuth, isAdmin,  async(req, res, next)=>{
+    console.log(req.body)
+
+    if(req.body.approval === 'Approved'){
+        changeShiftWorker(req.body.shift_1, req.body.requestee_id);
+        changeShiftWorker(req.body.shift_2, req.body.requester_id);
+        deleteTradeById(req.body.request_id)
+
+    } else {
+        deleteTradeById(req.body.request_id)
+    }
+
+    res.sendStatus(200)
 })
 
-app.get('/Cover-shift-Approval', isConnected, isAuth, (req, res, next)=>{
-    res.render("Cover-shift-Approval")
+app.post('/Submit-Time-Off', isConnected, isAuth, (req, res, next)=>{
+    addTimeOffRequest(req.body.Reason, req.body.Shift_Id, req.body.User_Id);
+    res.redirect('/')
+})
+
+app.post('/Submit-Cover', isConnected, isAuth, (req, res, next)=>{
+    addCoverRequest(req.body.ShiftId, req.body.RequesterUser, req.body.RequesteeUser);
+    res.redirect('/')
+})
+
+app.get('/Request-Off-Approval', isConnected, isAuth,isAdmin,  async(req, res, next)=>{
+    Requests = await getAllTimeOffRequest();
+
+    for(key in Requests){
+        requester_info = await getUserInfoById(Requests[key]["Requester"])
+        requester_hour = await getHourByShift(Requests[key]["RequesterShift"])
+        requester_time = await getTimeFromPlace(requester_hour["Hour"])
+        requester_day = await getDayByShift(Requests[key]["RequesterShift"])
+        requester_week = await getWeekById(requester_day["Week_Id"])        
+        requester_month = await getMonthById(requester_week["Month_Id"])      
+        Requests[key]["RequesterName"] = requester_info.fname + " " + requester_info.lname;
+        Requests[key]["RequesterTime"] = requester_month.Month + " " + (await getDOTM(requester_day["Day_Id"], requester_month.Month, requester_month.Year)).DOTM + ", " + requester_time
+        Requests[key]["RequestId"] = key
+        
+    }
+    res.render("Request-Off-Approval", {"Requests": Requests})
+})
+
+app.post('/Request-Off-Approval', isConnected, isAuth,isAdmin, async(req, res, next)=>{
+    if(req.body.approval === 'Approved'){
+        deleteTimeOffById(req.body.request_id)
+        deleteShiftById(req.body.shift_1)
+    } else {
+        deleteTimeOffById(req.body.request_id)
+    }
+
+    res.sendStatus(200)
+})
+
+app.get('/Cover-shift-Approval', isConnected, isAuth,isAdmin, async (req, res, next)=>{
+    Requests = await getAllCoverRequest();
+    console.log("IN Covers")
+    for(key in Requests){
+        requester_info = await getUserInfoById(Requests[key]["Requester"])
+        coveree_info = await getUserInfoById(Requests[key]["Coveree"])
+        requester_hour = await getHourByShift(Requests[key]["RequesterShift"])
+        requester_time = await getTimeFromPlace(requester_hour["Hour"])
+        requester_day = await getDayByShift(Requests[key]["RequesterShift"])
+        requester_week = await getWeekById(requester_day["Week_Id"])        
+        requester_month = await getMonthById(requester_week["Month_Id"])      
+        Requests[key]["RequesterName"] = requester_info.fname + " " + requester_info.lname;
+        Requests[key]["CovereeName"] = coveree_info.fname + " " + coveree_info.lname;
+        Requests[key]["RequesterTime"] = requester_month.Month + " " + (await getDOTM(requester_day["Day_Id"], requester_month.Month, requester_month.Year)).DOTM + ", " + requester_time
+        Requests[key]["RequestId"] = key
+        
+    }
+    res.render("Cover-shift-Approval", {"Requests": Requests})
+})
+
+app.post('/Cover-shift-Approval', isConnected, isAuth,isAdmin, async(req, res, next)=>{
+    if(req.body.approval === 'Approved'){
+        deleteCoverById(req.body.request_id)
+        changeShiftWorker(req.body.shift_1, req.body.requester_id)
+    } else {
+        deleteCoverById(req.body.request_id)
+    }
+
+    res.sendStatus(200)
 })
 
 app.get('/Pop-Up', isConnected, isAuth, (req, res, next)=>{
@@ -1486,6 +2237,8 @@ app.get('/Pop-Up', isConnected, isAuth, (req, res, next)=>{
 
 
 //Start App
-app.listen(port, function() {
+app.listen(port, async function() {
+    date = getCurrentMonthandWeek();
+    confirmation = await createMonthIfNotExist(date["month"], currentYear())
     console.log('App listening on port %d!',port)
   });

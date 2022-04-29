@@ -11,6 +11,7 @@ html(style='font-size: 16px;')
     link(href='css/User-Management.css' media='screen' rel='stylesheet')
     script.u-script(defer='' src='js/jquery.js' type='text/javascript')
     script.u-script(defer='' src='js/nicepage.js' type='text/javascript')
+    script.u-script(defer='' src='js/modalIntercept.js' type='text/javascript')
     script(src='https://kit.fontawesome.com/827e17ac31.js' crossorigin='anonymous')
     meta(content='Nicepage 4.6.5, nicepage.com' name='generator')
     link#u-theme-google-font(href='https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i' rel='stylesheet')
@@ -112,34 +113,17 @@ html(style='font-size: 16px;')
                 th.u-border-1.u-border-grey-dark-1.u-table-cell Shift
                 th.u-border-1.u-border-grey-dark-1.u-table-cell Actions
             tbody.u-align-center.u-custom-font.u-table-body.u-text-custom-color-3.u-white.u-table-body-1
-              tr(style='height: 12px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  | tschmidt3
-                  br
-                td.u-border-1.u-border-grey-dark-1.u-table-cell podom1
-                td.u-border-1.u-border-grey-dark-1.u-table-cell Shift Value
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  a(href='#')
-                    i.fa-solid.fa-check.icon-primary-color.fa-lg
-                  a(href='#')
-                    i.fa-solid.fa-lg.icon-primary-color.fa-x
-              tr(style='height: 25px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell bbrannon3
-                td.u-border-1.u-border-grey-dark-1.u-table-cell nhornbeck
-                td.u-border-1.u-border-grey-dark-1.u-table-cell Shift Value
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  a(href='#')
-                    i.fa-solid.fa-check.icon-primary-color.fa-lg
-                  a(href='#')
-                    i.fa-solid.fa-lg.icon-primary-color.fa-x
-              tr(style='height: 12px;')
-                td.u-border-1.u-border-grey-dark-1.u-table-cell dmeeks
-                td.u-border-1.u-border-grey-dark-1.u-table-cell podom1
-                td.u-border-1.u-border-grey-dark-1.u-table-cell Shift Value
-                td.u-border-1.u-border-grey-dark-1.u-table-cell
-                  a(href='#')
-                    i.fa-solid.fa-check.icon-primary-color.fa-lg
-                  a(href='#')
-                    i.fa-solid.fa-lg.icon-primary-color.fa-x
+              for request in Requests
+                tr(style='height: 12px;')
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell= request["RequesterName"]
+                    br
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell= request["CovereeName"]
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell= request["RequesterTime"]
+                  td.u-border-1.u-border-grey-dark-1.u-table-cell
+                    a(href='#' onclick="submitCoverApproval('Approved', '"+request["Requester"]+"', '"+request["RequesterShift"]+"', '"+ request["RequestId"]+"')")
+                      i.fa-solid.fa-check.icon-primary-color.fa-lg
+                    a(href='#' onclick="submitCoverApproval('Denied', '"+request["Requester"]+"', '"+request["RequesterShift"]+"', '"+ request["RequestId"]+"')")
+                      i.fa-solid.fa-lg.icon-primary-color.fa-x
+    
     footer.custom-footer
       .text-center.p-3

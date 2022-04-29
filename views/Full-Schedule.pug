@@ -43,22 +43,23 @@ html(style='font-size: 16px;')
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='User-Settings' style='padding: 10px 20px;') Preferences
               li.u-nav-item
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='My-Schedule' style='padding: 10px 20px;') Schedule Viewer
-              li.u-nav-item
-                a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
-                .u-nav-popup
-                  ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
-                    li.u-nav-item
-                      a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
+              if user['isAuth']
+                li.u-nav-item
+                  a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
+                  .u-nav-popup
+                    ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
+                      li.u-nav-item
+                        a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
               li.u-nav-item
                 a.u-button-style.u-nav-link.u-text-active-palette-1-base.u-text-hover-palette-2-base(href='Logout' style='padding: 10px 20px;') Logout
           .u-custom-menu.u-nav-container-collapse
@@ -72,22 +73,23 @@ html(style='font-size: 16px;')
                     a.u-button-style.u-nav-link(href='My-Schedule') Schedule Viewer
                   li.u-nav-item
                     a.u-button-style.u-nav-link(href='Logout') Logout
-                  li.u-nav-item
-                    a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
-                    .u-nav-popup
-                      ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
-                        li.u-nav-item
-                          a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
+                  if user['isAuth']
+                    li.u-nav-item
+                      a.u-button-style.u-nav-link.u-text-active-palette-1-base(href='#' style='padding: 10px 20px;') Admin Pages
+                      .u-nav-popup
+                        ul.u-h-spacing-20.u-nav.u-unstyled.u-v-spacing-10
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white(href='User-Management') User Management
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white.active(href='Role-Management') Role Management
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white.active(href='Trade-Shift-Approval') Trade Shift Approval
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white.active(href='Request-Off-Approval') Request Off Approval
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white.active(href='Cover-shift-Approval') Cover Shift Approval
+                          li.u-nav-item
+                            a.u-button-style.u-nav-link.u-white.active(href='Admin-Settings') Application Settings
             .u-black.u-menu-overlay.u-opacity.u-opacity-70
           style.offcanvas-style.
             .u-offcanvas .u-sidenav { flex-basis: 250px !important; }            .u-offcanvas:not(.u-menu-open-right) .u-sidenav { margin-left: -250px; }            .u-offcanvas.u-menu-open-right .u-sidenav { margin-right: -250px; }            @keyframes menu-shift-left    { from { left: 0;        } to { left: 250px;  } }            @keyframes menu-unshift-left  { from { left: 250px;  } to { left: 0;        } }            @keyframes menu-shift-right   { from { right: 0;       } to { right: 250px; } }            @keyframes menu-unshift-right { from { right: 250px; } to { right: 0;       } }
@@ -122,11 +124,11 @@ html(style='font-size: 16px;')
             thead
               tr
                 th.tg-vr4i(colspan='25')
-                  a(href='#')
+                  a(href='#' onclick="offSetWeek('"+(DateInfo["OffSet"]-1)+"')")
                     i.fa-solid.icon-white.fa-caret-left.fa-2xl
                   -var date = DateInfo["Month"] + " " + DateInfo["Day"] + ", " + DateInfo["Year"]
                     strong= "Week of " + date
-                  a(href='#')
+                  a(href='#' onclick="offSetWeek('"+(DateInfo["OffSet"]+1)+"')")
                     i.fa-solid.icon-white.fa-caret-right.fa-2xl
             tbody
               tr
@@ -160,9 +162,12 @@ html(style='font-size: 16px;')
                 td.tg-vr4i(rowspan='1')= val 
                 - for(x = 0; x < 24; x++)
                   if user.isAdmin == 0
-                    td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="transferShiftData(\'"+ info[key][x]["HourId"] +"\', \'"+x+"\', \'"+val+"\', \'"+info[key][x]["Shift_Id"]+"\')")= info[key][x]["WorkerName"]
+                    if !info[key][x]["HourId"]
+                      td.tg-0lax.blackText(style={background: "#D3D3D3"})
+                    else
+                      td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="transferShiftData(\'"+ info[key][x]["HourId"] +"\', \'"+x+"\', \'"+val+"\', \'"+info[key][x]["Shift_Id"]+"\', '"+info[key][x]["WO_Count"]+"', '" +info[key][x]["ShiftRoleId"]+"', '"+info[key][x]["WorkerId"]+"')")= info[key][x]["WorkerName"]
                   else if info[key][x]["Shift_Id"]
-                    td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="tradeShift('"+ info[key][x]["WorkerName"] +"', '"+info[key][x]["Shift_Id"]+"', '"+info[key][x]["ShiftRoleName"]+"', '"+x+"', '"+DateInfo["Month"]+"', '"+DateInfo["Year"]+"')")= info[key][x]["WorkerName"]
+                    td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="tradeShift('"+ info[key][x]["WorkerName"] +"', '"+info[key][x]["Shift_Id"]+"', '"+info[key][x]["ShiftRoleName"]+"', '"+x+"', '"+DateInfo["Month"]+"', '"+DateInfo["Year"]+"', '"+info[key][x]["WorkerId"]+"')")= info[key][x]["WorkerName"]
                   else if !info[key][x]["HourId"]
                     td.tg-0lax.blackText(style={background: "#D3D3D3"})
                   else

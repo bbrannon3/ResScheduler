@@ -8,6 +8,7 @@ html(style='font-size: 16px;')
     link(rel='stylesheet' href='css/nicepage.css' media='screen')
     script.u-script(type='text/javascript' src='js/jquery.js' defer='')
     script.u-script(type='text/javascript' src='js/nicepage.js' defer='')
+    script.u-script(type='text/javascript' src='js/modalIntercept.js' defer='')
     script(src='https://kit.fontawesome.com/827e17ac31.js' crossorigin='anonymous')
     link#u-theme-google-font(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i')
     link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
@@ -96,20 +97,18 @@ html(style='font-size: 16px;')
           .u-container-layout.u-valign-top.u-container-layout-1
             .u-align-left.u-container-style.u-custom-color-3.u-expanded-width.u-group.u-radius-10.u-shape-round.u-group-2
               .u-container-layout.u-container-layout-2
-                h3.u-text.u-text-default.u-text-1
-                  | April 14, 2022 10 am -2 pm
+                h3.u-text.u-text-default.u-text-1= Month+ " "+Day +", "+ Year +" " +Time
                   br
-                h3.u-text.u-text-default.u-text-2
-                  | Tyler Schmidt
+                h3.u-text.u-text-default.u-text-2= Fname + " " + Lname
                   br
-                h3.u-text.u-text-default.u-text-3 Role: Floater
+                h3.u-text.u-text-default.u-text-3= "Role: " + ShiftRole
             button(type='button' data-toggle='modal' data-target='#giveupshift')
               p.text-center
               p.u-border-none.u-btn.u-btn-round.u-button-style.u-color-scheme-summer-time.u-color-style-multicolor-1.u-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-2.customButton(style='color: #efd75f !important;') Request Shift Trade
             button(type='button' data-toggle='modal' data-target='#timeoffreason')
               p.text-center
               p.u-border-none.u-btn.u-btn-round.u-button-style.u-color-scheme-summer-time.u-color-style-multicolor-1.u-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-2.customButton(style='color: #efd75f !important;') Request Time Off
-            a.u-border-none.u-btn.u-btn-round.u-button-style.u-color-scheme-summer-time.u-color-style-multicolor-1.u-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-3(href='') Cover Shift
+            a.u-border-none.u-btn.u-btn-round.u-button-style.u-color-scheme-summer-time.u-color-style-multicolor-1.u-custom-color-3.u-radius-50.u-text-custom-color-4.u-btn-3(onclick="submitCover('"+ShiftId+"', '" +RequesterUser+"', '"+RequesteeUser+"')") Cover Shift 
             p  
     // Trade Shift Modal
     #giveupshift.modal.fade(tabindex='-1' role='dialog' aria-labelledby='giveupshift' aria-hidden='true')
@@ -120,18 +119,23 @@ html(style='font-size: 16px;')
               span(aria-hidden='true') ×
           .modal-body.text-center
             p Select which of your shifts you would like to trade for.
-            form
+            form(id="Shift_Trade")
               p
                 label
-                  | Attribute
-                  select#attribute(name='attribute')
+                  | Shift
+                  select(name='RequesterShift')
                     option(value='' selected='selected') Select One
-                    option(value='selection1') selection 1
-                    option(value='selection2') selection 2
-                    option(value='selection2') selection 3
+                    for val, key in RequesterShifts
+                      option(value= key)= val["Time"] +" "+ Month + " " + val["Day"]
+                  input(type="hidden" value= ShiftId name="RequesteeShift")                  
+                  input(type="hidden" value= RequesterUser name="RequesterId")
+                  input(type="hidden" value= RequesteeUser name="RequesteeId")
+
+                  
+                      
           .modal-footer
             button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-            button.btn.btn-primary(type='button') Save changes
+            button.btn.btn-primary(type='button' onclick='SubmitShiftTrade()') Save changes
     // End Trade Shift Modal
     // Time Off Reason Modal
     #timeoffreason.modal.fade(tabindex='-1' role='dialog' aria-labelledby='timeoffreason' aria-hidden='true')
@@ -142,13 +146,16 @@ html(style='font-size: 16px;')
               span(aria-hidden='true') ×
           .modal-body.text-center
             p What is the reason for your time off request?
-            form
+            form(id="TimeOffRequest")
               p
                 label
-                  input(type='text' name='attribute')
+                  input(type='text' name='Reason')
+                  input(type='hidden' name="Shift_Id" value= ShiftId)
+                  input(type='hidden' name="User_Id" value= RequesterUser)
+
           .modal-footer
             button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-            button.btn.btn-primary(type='button') Save changes
+            button.btn.btn-primary(type='button' onclick="submitTimeOff()") Save changes
     // End Time Off Reason Modal
     footer.custom-footer
       .text-center.p-3
