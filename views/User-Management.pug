@@ -134,10 +134,10 @@ html(style='font-size: 16px;')
                   td.u-border-1.u-border-grey-dark-1.u-table-cell= user.Email
                   td.u-border-1.u-border-grey-dark-1.u-table-cell= user.Phone
                   td.u-border-1.u-border-grey-dark-1.u-table-cell
-                   form(m)
+                   form()
                       input(type="hidden" value="Edit" name="Action")
                       input(type="hidden" value= user.id name="userId")
-                      button(type="button" onclick="postInPlace('/User-Management', this.parentNode)")
+                      button(type="button" onclick="postFormToUrl('/User-Management', this.parentNode)")
                         i.fa-regular.fa-lg.icon-primary-color.fa-pen-to-square
                       button(type="button" onclick="this.parentNode.Action.value = 'Delete'; postInPlace('/User-Management', this.parentNode)")
                         i.fa-regular.fa-lg.icon-primary-color.fa-trash-can

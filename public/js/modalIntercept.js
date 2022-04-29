@@ -3,6 +3,8 @@ const SHIFT_POST = '/PlaceWorker'
 const ROLE_DELETE = '/Delete-Role'
 const SHIFT_DELETE = '/DeleteShift'
 const TRADE_SHIFT = '/Trade-Shift'
+const SUBMIT_SHIFT_TRADE = "/Submit-Trade"
+const SUBMIT_TIME_OFF = "/Submit-Time-Off"
 
 function modalFind(name, color,id){
     form = document.getElementsByClassName("pop-up-hidden").item(0)
@@ -32,9 +34,12 @@ function submitShiftRole(){
 
     }
 
-function transferShiftData(hour, hour_place, day, shift){
+function transferShiftData(hour, hour_place, day, shift, workOrder, roleId, workerId){
     document.getElementById('hours_shift').value = hour;
     document.getElementById('Shift_Id').value = shift;
+    document.getElementById('workordercount').value = workOrder;
+    document.getElementById('selectrole').value = roleId;
+    document.getElementById('selectname').value = workerId;
     var time = ""
     switch(hour_place){
         case("0"):
@@ -115,7 +120,9 @@ function transferShiftData(hour, hour_place, day, shift){
     document.getElementsByClassName('Time').item(0).textContent = time;
 
     form = document.getElementsByClassName("pop-up-hidden").item(0)
-    form.setAttribute('class', 'pop-up-visable');
+    if (form){
+        form.setAttribute('class', 'pop-up-visable');
+    }
 } 
     
 function submitShift(){
@@ -196,7 +203,7 @@ function deleteRole(id){
 }
 
 
-function tradeShift(worker_name, shift_id, role_name, Hour, month, year){
+function tradeShift(worker_name, shift_id, role_name, Hour, month, year, worker_id){
     if(shift_id){
     var time = ""
     switch(Hour){
@@ -280,11 +287,34 @@ function tradeShift(worker_name, shift_id, role_name, Hour, month, year){
         role_name,
         time,
         month,
-        year
+        year,
+        worker_id
     }
    
     post_to_url(TRADE_SHIFT, out)
     } 
+}
+
+
+function SubmitShiftTrade(){
+    values = new FormData(document.getElementById("Shift_Trade"));
+    out ={}
+    for (var pair of values.entries()) {
+         out[pair[0]]= pair[1];
+      }
+
+    post_to_url(SUBMIT_SHIFT_TRADE, out)
+}
+
+
+function postFormToUrl(path, form){
+    values = new FormData(form);
+    out ={}
+    for (var pair of values.entries()) {
+         out[pair[0]]= pair[1];
+      }
+
+    post_to_url(path, out)
 }
 
 
@@ -311,4 +341,92 @@ function post_to_url(path, params, method) {
 
     document.body.appendChild(form);
     form._submit_function_(); //Call the renamed function.
+}
+
+function submitTradeApproval(approval, requester_id, requestee_id, shift_1, shift_2, request_id){
+    out = {
+        approval, requester_id, requestee_id, shift_1, shift_2, request_id
+    }
+
+    fetch("/Trade-Shift-Approval",{
+        method : 'POST',
+        body : JSON.stringify(out),
+        headers : {
+            'content-type' : 'application/json'
+        }
+    }).then((response)=>{
+        location.reload()
+    })
+}
+
+
+function submitTimeOff(){
+    values = new FormData(document.getElementById("TimeOffRequest"));
+    var out ={}
+    for (var pair of values.entries()) {
+         out[pair[0]]= pair[1];
+      }
+
+      post_to_url(SUBMIT_TIME_OFF, out)
+
+
+}
+
+
+function submitTimeOffApproval(approval, requester_id, shift_1, request_id){
+    out = {
+        approval, requester_id, shift_1, request_id
+    }
+
+    fetch("/Request-Off-Approval",{
+        method : 'POST',
+        body : JSON.stringify(out),
+        headers : {
+            'content-type' : 'application/json'
+        }
+    }).then((response)=>{
+        location.reload()
+    })
+}
+
+function submitCover(ShiftId, RequesterUser, RequesteeUser){
+ out ={
+     ShiftId,
+     RequesterUser,
+     RequesteeUser
+ }
+
+ post_to_url("/Submit-Cover", out)
+}
+
+function submitCoverApproval(approval, requester_id, shift_1, request_id){
+    out = {
+        approval, requester_id, shift_1, request_id
+    }
+
+    fetch("/Cover-shift-Approval",{
+        method : 'POST',
+        body : JSON.stringify(out),
+        headers : {
+            'content-type' : 'application/json'
+        }
+    }).then((response)=>{
+        location.reload()
+    })
+}
+
+function offSetWeek(OffSet){
+    out = {
+        "OffSet": +OffSet
+    }
+    post_to_url("/Full-Schedule", out)
+
+}
+
+function offSetWeekMine(OffSet){
+    out = {
+        "OffSet": +OffSet
+    }
+    post_to_url("/My-Schedule", out)
+
 }
