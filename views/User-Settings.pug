@@ -191,11 +191,14 @@ html(style='font-size: 16px;')
                           td.tg-vr4i(rowspan='1')= val 
                           - for(x = 0; x < 24; x++)
                             -var notAva= true
+                            -var ava=false
                             each place in Avalability
                                 if place['Hour'] == x && place['Day'] == key
                                    - notAva= false  
+                                   if place["Avalability"] == 1
+                                    -ava = true
                       
-                            td.tg-0lax.blackText(style=notAva?{background: "#FFFFFF"}:{background: "#FF0000"})
+                            td.tg-0lax.blackText(style=notAva? {background:"#FFFFFF"}: ava? {background: "#00FF00"} : {background: "#FF0000"})
                               form(style={height: "100%", width: "100%"})
                                 input(type="hidden" value= x name="Hour")
                                 input(type="hidden" value= key name="Day")
