@@ -162,7 +162,7 @@ html(style='font-size: 16px;')
                     if !info[key][x]["HourId"]
                       td.tg-0lax.blackText(style={background: "#D3D3D3"})
                     else
-                      td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="transferShiftData(\'"+ info[key][x]["HourId"] +"\', \'"+x+"\', \'"+val+"\', \'"+info[key][x]["Shift_Id"]+"\', '"+info[key][x]["WO_Count"]+"', '" +info[key][x]["ShiftRoleId"]+"', '"+info[key][x]["WorkerId"]+"')")= info[key][x]["WorkerName"]
+                      td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="transferShiftData(\'"+ info[key][x]["HourId"] +"\', \'"+x+"\', \'"+val+"\', \'"+info[key][x]["Shift_Id"]+"\', '"+info[key][x]["WO_Count"]+"', '" +info[key][x]["ShiftRoleId"]+"', '"+info[key][x]["WorkerId"]+"'); sortUsers('"+key+"', '"+x+"')")= info[key][x]["WorkerName"]
                   else if info[key][x]["Shift_Id"]
                     td.tg-0lax.blackText(style={background: "#"+info[key][x]["ShiftRoleColor"]} id= info[key][x]["HourId"] onclick="tradeShift('"+ info[key][x]["WorkerName"] +"', '"+info[key][x]["Shift_Id"]+"', '"+info[key][x]["ShiftRoleName"]+"', '"+x+"', '"+DateInfo["Month"]+"', '"+DateInfo["Year"]+"', '"+info[key][x]["WorkerId"]+"')")= info[key][x]["WorkerName"]
                   else if !info[key][x]["HourId"]
