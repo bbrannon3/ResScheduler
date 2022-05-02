@@ -1111,6 +1111,39 @@ async function getAvalabilityById(user_id){
   })
 }
 
+async function getAllAvalability(){
+    return new Promise(resolve =>{
+    out = {};
+    connection.query('Select iduser_avalablility, day, hour, avalability, user_id from user_avalablility', function(error, results, fields){
+        if (error) 
+           {
+               console.log(error);
+           }
+      else if(results.length>0)
+        {
+            var i = 0;
+            results.forEach(element => {
+                out[i] = {
+                    "Ava_Id": element["iduser_avalablility"],
+                    "Day": element["day"],     
+                    "Hour":element["hour"],
+                    "Avalability":element["avalability"],
+                    "User": element["user_id"]
+                        }
+                i+=1;
+            });
+            console.log(out)
+            resolve(out);        
+       }
+       else
+       {
+          
+           resolve([])
+       }
+    })
+  })
+}
+
 async function getAllUsersWithRole(){
     return new Promise(resolve =>{
     out = {};
@@ -2032,7 +2065,7 @@ app.post('/DeleteShift', isAdmin,(req, res, next)=>{
     res.sendStatus("200")
 })
 
-app.post('/PlaceAvalability', isAdmin,(req, res, next)=>{
+app.post('/PlaceAvalability', (req, res, next)=>{
     console.log(req.body)
     createAvalability(req.body["Hour"], req.body["Day"], req.body["UserId"])
     res.sendStatus(200)
@@ -2249,6 +2282,18 @@ app.post('/Cover-shift-Approval', isConnected, isAuth,isAdmin, async(req, res, n
     }
 
     res.sendStatus(200)
+})
+
+app.post('/All-User-Avalability', async(req,res, next)=>{
+    out = await getAllAvalability();
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(out));
+})
+
+app.post('/All-Users', async(req,res, next)=>{
+    out = await getAllUsersWithRole();
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(out));
 })
 
 app.get('/Pop-Up', isConnected, isAuth, (req, res, next)=>{

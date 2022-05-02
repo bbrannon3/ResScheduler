@@ -11,7 +11,6 @@ function modalFind(name, color,id){
     form.setAttribute('class', 'pop-up-visable');
     document.getElementById('role-name').value = name;
     document.getElementById('role-color').value = color;
-    console.log(id)
     document.getElementById('role-id').value = id;
 }
 
@@ -21,7 +20,6 @@ function submitShiftRole(){
     for(i=0; i < inputs.length; i++){
         out[inputs[i].name] = inputs[i].value;
     }
-    console.log(out)
     fetch(SHIFT_ROLE,{
         method : 'POST',
         body : JSON.stringify(out),
@@ -115,7 +113,7 @@ function transferShiftData(hour, hour_place, day, shift, workOrder, roleId, work
             time = "11:00 PM, "
             break;
     }
-    console.log(time)
+   
     time += day;
     document.getElementsByClassName('Time').item(0).textContent = time;
 
@@ -429,4 +427,136 @@ function offSetWeekMine(OffSet){
     }
     post_to_url("/My-Schedule", out)
 
+}
+
+function sortUsers(day, hour) {
+    var selElem = document.getElementById('selectname')
+    var selectedUser = selElem.value || -1;
+    var tmpAry = new Array();
+    var allUsers;
+    fetch("/All-Users",{
+        method : 'POST',
+        body : "",
+        headers : {
+            'content-type' : 'application/json'
+        }
+    }).then(response=> response.json()).then(data => {
+        allUsers = data;
+        i = 0
+        for (key in allUsers) {
+            tmpAry[i] = new Array();
+            tmpAry[i][0] = allUsers[key]["UserName"];
+            tmpAry[i][1] = allUsers[key]["id"];
+            i++;
+        }
+       
+    //Go get avalabilty for users
+
+    fetch("/All-User-Avalability",{
+        method : 'POST',
+        body : "",
+        headers : {
+            'content-type' : 'application/json'
+        }
+    }).then(response=> response.json()).then(data =>{
+
+    var place = 0;
+    var secondPlace = 0;
+
+    let newAry = new Array();
+    let notAry = new Array();
+    
+    let status = ["Avalable", "Not Specified", "Not Avalable", "Done"]
+    
+    status.forEach(stats =>{ 
+       
+        if(stats != "Done"){
+            newAry[place] = new Array();
+            newAry[place][0] = stats;
+            newAry[place][1] = -1;
+            place +=1;
+        }
+
+        if(stats == "Avalable"){
+            tmpAry.forEach(user=>{                
+                for(key in data){                   
+                    if(data[key]["User"] === +user[1] && data[key]["Avalability"] === 1 && data[key]["Day"] === +day && data[key]["Hour"] === +hour){
+                        newAry[place] = new Array();
+                        newAry[place][0] = user[0];
+                        newAry[place][1] = user[1];
+                        place +=1;
+                    }
+                }
+                
+            })        
+        }
+
+        if (stats == "Not Specified"){
+             tmpAry.forEach(user =>{
+                for(key in data){
+                    if(data[key]["User"] === +user[1] && data[key]["Avalability"] === 0 && data[key]["Day"] === +day && data[key]["Hour"] === +hour){
+                        notAry[secondPlace] = new Array();
+                        notAry[secondPlace][0] = user[0];
+                        notAry[secondPlace][1] = user[1];
+                        secondPlace +=1;
+                    }
+                }
+            })
+            tmpAry.forEach(user =>{
+                var found = false
+                for(key in data){
+                    if(data[key]["User"] === +user[1] && data[key]["Day"] === +day && data[key]["Hour"] === +hour){
+                        found = true;
+                    }
+                }
+               
+                if(!found){
+                    newAry[place] = new Array();
+                    newAry[place][0] = user[0];
+                    newAry[place][1] = user[1];
+                    place +=1;
+                }
+            })
+
+        }
+
+        if(stats == "Not Avalable"){
+             notAry.forEach(user=>{
+                newAry[place] = new Array();
+                newAry[place][0] = user[0];
+                newAry[place][1] = user[1];
+                place +=1;
+            })
+        }
+
+        if(stats == "Done"){
+            tmpAry = newAry;
+        }
+
+    })
+
+    while (selElem.options.length > 0) {
+        selElem.options[0] = null;
+    }
+    for (var i=0;i<tmpAry.length;i++) {
+        var op = new Option(tmpAry[i][0], tmpAry[i][1]);
+        selElem.options[i] = op;
+    }
+
+    if(selectedUser != -1){
+        selElem.value = selectedUser;
+    } 
+    return;
+
+        
+    })
+    
+    
+    
+        
+    })
+
+
+
+    
 }
